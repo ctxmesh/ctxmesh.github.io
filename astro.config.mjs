@@ -12,6 +12,8 @@ export default defineConfig({
 			title: 'ctxmesh',
 			description:
 				'The Kubernetes-native platform for building, governing, and operating AI agents at scale.',
+			logo: { src: './src/assets/logo.svg', replacesTitle: true },
+			customCss: ['./src/styles/custom.css'],
 			social: [
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/ctxmesh' },
 			],
