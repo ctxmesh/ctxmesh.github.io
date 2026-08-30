@@ -47,7 +47,7 @@ You generally don't set these; they're stamped by the platform and useful to rea
 | `agents.ctxmesh.ai/source-spec` | `AgentDeployment` | The simplified `agent.yaml` the deployment was expanded from (round-trips create/edit/detail). |
 | `agents.ctxmesh.ai/display-name` | providers / namespaces | Human display name (an annotation, not a label, so it isn't constrained to label syntax). |
 | `agents.ctxmesh.ai/launcher-image` | agent revision | The launcher image stamped on the revision for auditability ("which agents run launcher X" is one query). |
-| `agent-engine.ctxmesh.ai/config-hash` | gateway pod template | The rendered-config hash — changes only when the rendered gateway config changes, rolling the gateway without spurious restarts. |
+| `agentry.ctxmesh.ai/config-hash` | gateway pod template | The rendered-config hash — changes only when the rendered gateway config changes, rolling the gateway without spurious restarts. |
 
 The MCP/OAuth flow uses several further `agents.ctxmesh.ai/mcp-*` annotations (URL, auth type, OAuth
 endpoints, boundary) on MCP resources — these are internal to the BYO-MCP mechanism and covered under

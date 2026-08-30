@@ -49,7 +49,7 @@ label cap) minus that 19-character budget leaves 44 characters of name.
 | `spec.sessionMemory` | object | No | — | Conversation memory (the folded home of the retired `MemoryBinding`). Absent ⇒ no conversation memory. |
 | `spec.sessionMemory.scope` | string (enum) | No | `session` | `session` = private per-agent; `shared` = a registry-shared team scratchpad (requires the agent to be a registry member). |
 | `spec.sessionMemory.perUser` | bool | No | `false` | Isolate each invoking end-user's conversation memory into its own bucket. Product-grade (launcher-stamped), only meaningful for `session` scope; breaks conversation handoff/share-links, so opt-in. |
-| `spec.sessionMemory.backend.addr` | string | No | cluster state-layer | `host:port` of the Valkey backend. Defaults to `agent-engine-statelayer.agent-engine-system.svc:6379`. MaxLength 256. |
+| `spec.sessionMemory.backend.addr` | string | No | cluster state-layer | `host:port` of the Valkey backend. Defaults to `agentry-statelayer.agentry.svc:6379`. MaxLength 256. |
 | `spec.longTermMemory` | object | No | — | Long-term, cross-conversation semantic memory (pgvector), orthogonal to `sessionMemory`. |
 | `spec.longTermMemory.enabled` | bool | No | `false` | Turns on long-term memory. |
 | `spec.longTermMemory.perUser` | bool | No | `false` | Scope each memory to the invoking user (store scope `agent_user`) rather than agent-wide. |

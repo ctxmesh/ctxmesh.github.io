@@ -84,9 +84,9 @@ long-term archival, stream the same rows into your data warehouse.
 
 ## Operational signals
 
-Prune health is exported on the manager `/metrics`: `agentengine_audit_pruned_rows_total`,
-`agentengine_audit_prune_failures_total`, `agentengine_audit_prune_last_success_seconds`,
-`agentengine_audit_dropped_rows_total`. Alert on rising `prune_failures_total` or a stalled
+Prune health is exported on the manager `/metrics`: `agentry_audit_pruned_rows_total`,
+`agentry_audit_prune_failures_total`, `agentry_audit_prune_last_success_seconds`,
+`agentry_audit_dropped_rows_total`. Alert on rising `prune_failures_total` or a stalled
 `prune_last_success_seconds` (retention lag / DB down), and on `dropped_rows_total` (audit write
 back-pressure).
 

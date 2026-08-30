@@ -102,7 +102,7 @@ with zero cluster and zero cloud.
   and the egress sidecar records tool I/O **before** on-behalf-of credential injection — so **no
   credential ever lands in a fixture**. The fixture is content-addressed, VCR-cassette-shaped, and
   **sensitive-by-default / not-for-git**.
-- Replay (`agent-engine dev --replay`) mocks both channels: **lenient on request bytes** (a drifted
+- Replay (`agentry dev --replay`) mocks both channels: **lenient on request bytes** (a drifted
   prompt timestamp serves the recorded response with a warning) but **strict on shape** (an
   unrecorded tool call or model-index overflow is a hard fail).
 

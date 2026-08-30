@@ -16,8 +16,8 @@ non-obvious coupling — **BFF HA requires the durable run store**.
 The chart ships a production overlay that satisfies every HA invariant self-consistently:
 
 ```bash
-helm install ctxmesh ./deploy/helm/agent-engine \
-  -f deploy/helm/agent-engine/values-production.yaml \
+helm install ctxmesh ./deploy/helm/agentry \
+  -f deploy/helm/agentry/values-production.yaml \
   [+ your own overrides]
 ```
 

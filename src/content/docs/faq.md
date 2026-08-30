@@ -32,7 +32,7 @@ launcher (PID 1 in every agent pod) is the un-forgeable enforcement point. See
 ### Do I need Kubernetes?
 
 **Yes.** ctxmesh is a Kubernetes operator — CRDs, a controller, Knative-based serving. There is no
-non-Kubernetes deployment. For **local iteration without a cluster**, the CLI's `agent-engine dev` runs
+non-Kubernetes deployment. For **local iteration without a cluster**, the CLI's `agentry dev` runs
 an agent against a mock or real gateway (optionally with the console UI) — but the platform itself
 targets Kubernetes. See [Production install](/operations/install-production/).
 

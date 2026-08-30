@@ -1,14 +1,14 @@
 ---
 title: CLI
-description: "The agent-engine CLI: expand, dev [--ui|--replay], eval, download-fixture, replay-serve — flags, exit codes, and env."
+description: "The agentry CLI: expand, dev [--ui|--replay], eval, download-fixture, replay-serve — flags, exit codes, and env."
 ---
 
-The command-line tool is a single binary (`agent-engine`) with a handful of subcommands for authoring,
+The command-line tool is a single binary (`agentry`) with a handful of subcommands for authoring,
 local iteration, the CI/CD eval gate, and record/replay. Everything the CLI does is also reachable from
 the console — the CLI is the scriptable, CI-friendly path.
 
 :::note
-The binary is named `agent-engine` (the engine's build name); the product is **ctxmesh**. Exact
+The binary is named `agentry` (the engine's build name); the product is **ctxmesh**. Exact
 distribution coordinates finalize toward GA. Flags and exit codes below are confirmed against the
 shipped commands.
 :::
@@ -19,7 +19,7 @@ Expand the simplified `agent.yaml` authoring format into a full `AgentDeployment
 stdout.
 
 ```
-agent-engine expand <file>
+agentry expand <file>
 ```
 
 - Reads the simplified format (`name`, `image`, `executionModel`, `resources`, `scaling`, `model.route`,
@@ -34,7 +34,7 @@ Run an agent locally — no cluster — against a mock or real model gateway, op
 or a recorded replay.
 
 ```
-agent-engine dev [flags]
+agentry dev [flags]
 ```
 
 | Flag | Default | Meaning |
@@ -59,7 +59,7 @@ Run the CI/CD eval gate for a candidate `agent.yaml`: apply it to an eval namesp
 preview**, poll the in-cluster eval-gate to a terminal phase, and exit with a structured report.
 
 ```
-agent-engine eval --candidate agent.yaml --min-score 0.80
+agentry eval --candidate agent.yaml --min-score 0.80
 ```
 
 | Flag | Default | Meaning |
@@ -81,7 +81,7 @@ traffic during eval; applied resources are deleted on exit (best-effort). See
 Download and merge a recorded run's replay fixture from the object store into a local file.
 
 ```
-agent-engine download-fixture <run-id> [-o out.json]
+agentry download-fixture <run-id> [-o out.json]
 ```
 
 - Pulls every partial fixture blob a run recorded — the **model channel** (captured at the launcher
@@ -104,8 +104,8 @@ fixture, or a fetch/merge/write error.
 Typical loop:
 
 ```bash
-agent-engine download-fixture run-abc123
-agent-engine dev --replay run-abc123.fixture.json
+agentry download-fixture run-abc123
+agentry dev --replay run-abc123.fixture.json
 ```
 
 See [Record & replay](/guides/record-and-replay/).
@@ -115,7 +115,7 @@ See [Record & replay](/guides/record-and-replay/).
 Serve a recorded fixture as the both-channel replay mock.
 
 ```
-agent-engine replay-serve <fixture-path> [-p 4000]
+agentry replay-serve <fixture-path> [-p 4000]
 ```
 
 Internal — this is what `dev --replay` uses under the hood; documented for completeness. `-p/--port`

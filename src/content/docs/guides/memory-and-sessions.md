@@ -35,7 +35,7 @@ spec:
   sessionMemory:
     scope: session          # session (private, default) | shared (registry team scratchpad)
     # backend:
-    #   addr: agent-engine-statelayer.agent-engine-system.svc:6379   # default if omitted
+    #   addr: agentry-statelayer.agentry.svc:6379   # default if omitted
 ```
 
 Apply it:
@@ -110,7 +110,7 @@ per-user segment) — which is exactly why it is opt-in.
 ## Defaults
 
 - `scope` defaults to `session` (private per-agent); `perUser` defaults to `false`.
-- `backend.addr` defaults to `agent-engine-statelayer.agent-engine-system.svc:6379`.
+- `backend.addr` defaults to `agentry-statelayer.agentry.svc:6379`.
 - The managed loop replays only the last **`MAX_HISTORY_MESSAGES` = 40** turns as prompt context; older
   turns fall out of the prompt (the store still holds them, capped below).
 - The store retains the last **500 entries** per conversation (`LTRIM` on append) and each conversation
