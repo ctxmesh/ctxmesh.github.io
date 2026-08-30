@@ -33,7 +33,7 @@ spec:
     # - type: llm-judge             # a judge model via a ModelRoute
     #   modelRoute: cheap-judge
     #   weight: 2
-  threshold: 0.8                    # suite score (weighted mean of scorers), 0..1
+  threshold: "0.8"                  # suite score (weighted mean of scorers), 0..1 (string)
   gate: block                       # block | warn
 ```
 

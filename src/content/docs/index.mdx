@@ -1,56 +1,272 @@
 ---
 title: ctxmesh
-description: "The Kubernetes-native platform for building, governing, and operating AI agents at scale."
+description: "Run AI agents like production software — a Kubernetes-native platform for building, governing, and operating agents at scale."
 template: splash
 hero:
-  tagline: Build, govern, and operate AI agents on Kubernetes — declaratively, with guardrails, evals, and deep observability built in.
+  title: Run AI agents like production software.
+  tagline: >-
+    ctxmesh makes an agent a Kubernetes resource — and reconciles the hard parts around it:
+    model routing and budgets, fail-closed guardrails, human approvals, eval-gated canary
+    rollout, and a step-level trace of every run.
   actions:
-    - text: Get started
-      link: /getting-started/introduction/
+    - text: Deploy your first agent
+      link: /getting-started/quickstart/
       icon: right-arrow
-    - text: Concepts
+    - text: How it works
       link: /concepts/architecture/
       icon: open-book
       variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Tabs, TabItem, LinkButton } from '@astrojs/starlight/components';
 
-## Agents as first-class Kubernetes resources
+<div class="landing">
 
-ctxmesh turns an AI agent into a declarative, governed, observable workload. You describe an
-agent as a Kubernetes resource; the platform handles serving, model routing, guardrails,
-human-in-the-loop approvals, eval-gated rollout, feedback, cost, and tracing — the operational
-substance that turns a prototype into production.
+<p class="eyebrow center">agents.ctxmesh.ai/v1beta1 · Kubernetes-native · fail-closed by design</p>
 
-<CardGrid stagger>
-	<Card title="Declarative agents" icon="rocket">
-		Ship an agent as an `AgentDeployment` custom resource — image, model route, tools,
-		memory, and scaling in one spec. No bespoke glue.
-	</Card>
-	<Card title="Governance built in" icon="approve-check">
-		`GuardrailPolicy` (PII / denylist / LLM-judge), declarative `ApprovalPolicy` for
-		human-in-the-loop tool gating, and per-tenant budgets — enforced fail-closed.
-	</Card>
-	<Card title="Eval-gated rollout" icon="random">
-		Promote on a passing `EvalSuite`, canary a candidate with a traffic split, and
-		auto-progress or auto-roll-back on the online score.
-	</Card>
-	<Card title="Deep observability" icon="chart-line">
-		The step → tool → model causal tree, cost, and feedback — without instrumenting your
-		code, via base-image auto-instrumentation and launcher-traced endpoints.
-	</Card>
-	<Card title="Feedback → improvement" icon="comment">
-		Correlate human, judge, and external feedback to traces with a `FeedbackStore`, and
-		fold it into the online score that gates the next release.
-	</Card>
-	<Card title="Multi-tenant & Kubernetes-native" icon="setting">
-		Namespaced isolation, RBAC-scoped access, and standard operator conventions — it runs
-		where your platform already runs.
-	</Card>
-</CardGrid>
+<div class="showcase not-content">
 
-## Next step
+<Tabs>
+<TabItem label="agent.yaml">
 
-New here? Start with the [Introduction](/getting-started/introduction/), then deploy your first
-agent in the [Quickstart](/getting-started/quickstart/).
+```yaml
+apiVersion: agents.ctxmesh.ai/v1beta1
+kind: AgentDeployment
+metadata:
+  name: support-agent
+  namespace: my-team
+spec:
+  image: ghcr.io/my-org/support-agent:1.0.0
+  executionModel: serving
+  guardrailPolicyRef: default-guardrails   # fail-closed content rules
+  approvalPolicyRef: sensitive-tools       # human sign-off on risky tools
+  evalSuiteRef: support-quality            # no promotion below threshold
+  budget:
+    perConversationUSD: "0.50"
+  rollout:
+    strategy: canary
+    canaryPercent: 10
+    autoRollback:
+      enabled: true
+```
+
+</TabItem>
+<TabItem label="deploy">
+
+```console
+$ kubectl apply -f agent.yaml
+agentdeployment.agents.ctxmesh.ai/support-agent created
+
+$ kubectl get agentdeployment support-agent
+NAME            READY   URL                                          GATE
+support-agent   True    https://support-agent.my-team.example.com    promoted
+```
+
+</TabItem>
+<TabItem label="invoke">
+
+```console
+$ curl -s "$URL" -d '{"input":"Refund order #4821"}'
+{"output":"I've started the refund for order #4821 — it's pending
+ approval from your team, and you'll be notified when it lands."}
+```
+
+</TabItem>
+</Tabs>
+
+<p class="showcase-caption">One resource in. A governed, autoscaled, traced agent out — the guardrails, the approval pause, and the full step-level trace were <em>not</em> in the agent's code.</p>
+
+</div>
+
+<section class="band">
+
+## The gap between a demo and a deployment is operational.
+
+Getting an agent to work is a weekend. Getting it into production is the actual job: which model,
+at what cost ceiling; what the agent may say and do; who signs off before it touches a payment API;
+how a new prompt is proven before it serves real traffic; and what exactly happened at 2&nbsp;a.m.
+when a run went sideways.
+
+Today every team answers those with bespoke glue — a proxy here, a script there, a spreadsheet of
+prompts. **ctxmesh makes each answer a Kubernetes resource:** versioned, code-reviewed, reconciled
+by an operator, and fail-closed when something's missing.
+
+<div class="mapping not-content">
+  <div><span>Which model, with what fallback and budget?</span><code>ModelRoute</code></div>
+  <div><span>What may it say? What must it never leak?</span><code>GuardrailPolicy</code></div>
+  <div><span>Who approves the dangerous tool call?</span><code>ApprovalPolicy</code></div>
+  <div><span>Is the new version actually better?</span><code>EvalSuite</code></div>
+  <div><span>How does it reach 100% of traffic?</span><code>spec.rollout — canary + auto-rollback</code></div>
+  <div><span>What happened, step by step, and what did it cost?</span><code>the trace — no instrumentation</code></div>
+</div>
+
+</section>
+
+<section class="band feature-row">
+<div class="feature-copy">
+
+<p class="eyebrow">Governance</p>
+
+### Fail-closed, enforced in the pod — not middleware you hope is installed.
+
+Every agent pod runs the ctxmesh launcher as PID&nbsp;1. It scans input and output against the
+referenced `GuardrailPolicy` — deterministic PII detectors, pattern denylists, an optional LLM
+judge — and brokers every tool call, pausing the run when the `ApprovalPolicy` says a human signs
+off first.
+
+The contract is fail-closed. A dangling policy reference doesn't degrade to "unguarded" — it holds
+the agent at `Ready=False`. There is no code path where an agent serves without the governance it
+names.
+
+<p class="feature-links">[Guardrails →](/guides/guardrails/) · [Approvals →](/guides/approvals/)</p>
+
+</div>
+
+```yaml
+apiVersion: agents.ctxmesh.ai/v1beta1
+kind: GuardrailPolicy
+metadata:
+  name: default-guardrails
+spec:
+  failMode: closed
+  piiDetectors:
+    builtIns: true
+  patternDenylist:
+    - name: prompt-injection
+      pattern: "(?i)ignore (all|previous) instructions"
+      action: block
+      appliesTo: input
+  userRateLimit:
+    requestsPerMinute: 30
+    spendUSD: "5.00"
+```
+
+</section>
+
+<section class="band feature-row reverse">
+<div class="feature-copy">
+
+<p class="eyebrow">Quality &amp; rollout</p>
+
+### No release ships on vibes.
+
+Reference an `EvalSuite` and every candidate revision is scored against your dataset before it
+serves — below threshold, the rollout is blocked and the old revision keeps serving. Pass, and a
+canary takes a traffic split while online scores accumulate on both arms.
+
+From there it's policy, not pager duty: auto-progress walks the canary up a percent ladder on
+healthy verdicts; auto-rollback returns to the last healthy version the moment a regression is
+detected.
+
+<p class="feature-links">[Evals &amp; the deploy gate →](/guides/evals-and-the-deploy-gate/) · [Canary &amp; rollout →](/guides/canary-and-rollout/)</p>
+
+</div>
+
+```yaml
+apiVersion: agents.ctxmesh.ai/v1beta1
+kind: EvalSuite
+metadata:
+  name: support-quality
+spec:
+  dataset:
+    ref: support-golden-set
+  scorers:
+    - name: correctness
+      type: llm-judge
+      weight: 3
+    - name: format-check
+      type: code
+      weight: 1
+  threshold: "0.85"
+```
+
+</section>
+
+<section class="band feature-row">
+<div class="feature-copy">
+
+<p class="eyebrow">Observability</p>
+
+### Every step, tool call, and token — without instrumenting your code.
+
+A run is not a log line. ctxmesh records the causal tree — step → tool → model — with latency,
+token counts, and cost on every node, plus human and judge feedback correlated back to the trace
+that earned it.
+
+You don't wire any of it. Framework spans come from base-image auto-instrumentation; the launcher
+traces everything that crosses its endpoints. The same online scores that feed your dashboards gate
+the next release.
+
+<p class="feature-links">[Observability &amp; tracing →](/guides/observability-and-tracing/)</p>
+
+</div>
+
+```text
+run 01JC8QK4M2  ·  support-agent v3 (canary)          $0.0038 · 2.41s
+├─ guardrails   input scan                pass            3 ms
+├─ step         plan                                    412 ms
+│  └─ model     default-model                291 ms · 1,204 tok · $0.0021
+├─ tool         refund_payment            held — awaiting approval
+│  └─ approval  granted · sre-oncall                   38 s
+├─ step         respond
+│  └─ model     default-model                203 ms ·   688 tok · $0.0011
+└─ guardrails   output scan               pass            2 ms
+```
+
+</section>
+
+<section class="band">
+
+## More than one agent. All still governed.
+
+<div class="bento not-content">
+  <article class="bento-card wide">
+    <h3>Multi-agent, still governed</h3>
+    <p><code>AgentTeam</code> gives a supervisor a roster and a spawn budget; <code>Workflow</code> declares graphs with typed error routing. Delegation inherits governance — a sub-agent can't do what its team may not.</p>
+  </article>
+  <article class="bento-card">
+    <h3>Knowledge built in</h3>
+    <p>A <code>KnowledgeBase</code> is upload → chunk → embed → index, granted by reference. RAG as a resource, not a pipeline you babysit.</p>
+  </article>
+  <article class="bento-card">
+    <h3>Tenancy platform teams recognize</h3>
+    <p><code>Tenant</code> groups namespaces with quotas and budgets. The console acts with <em>your</em> RBAC — caller-scoped, never a god service account.</p>
+  </article>
+  <article class="bento-card">
+    <h3>Scale to zero, wake on demand</h3>
+    <p>Serving on Knative, eventing on KEDA, batch as Jobs — the execution model is one field, and rollout adapts to each.</p>
+  </article>
+</div>
+
+<p class="stack-title">Integrates proven infrastructure. Reinvents none of it.</p>
+
+<ul class="stack not-content">
+  <li>Kubernetes</li>
+  <li>Knative</li>
+  <li>KEDA</li>
+  <li>LiteLLM — any provider</li>
+  <li>OpenTelemetry / OTLP</li>
+  <li>MCP</li>
+  <li>External Secrets</li>
+  <li>Helm</li>
+  <li>Postgres</li>
+  <li>Valkey</li>
+</ul>
+
+</section>
+
+<section class="band cta">
+
+## Your first governed agent in five minutes.
+
+The quickstart ships a deterministic mock model provider — no API key, no provider account, no bill.
+`helm install`, apply two resources, and watch the trace appear.
+
+<div class="cta-actions">
+  <LinkButton href="/getting-started/quickstart/" icon="right-arrow">Start the quickstart</LinkButton>
+  <LinkButton href="/getting-started/concepts-in-2-minutes/" variant="minimal">Concepts in 2 minutes</LinkButton>
+</div>
+
+</section>
+
+</div>
