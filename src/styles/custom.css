@@ -1,249 +1,391 @@
-/* ctxmesh brand theme + landing system — layered over Starlight's tokens.
-   Direction: clean/technical, indigo-violet accent on slate, Inter type. */
+/* ═══════════════════════════════════════════════════════════════════════════
+   ctxmesh — "Manifest & Reconcile"
+   An engineering spec-sheet identity: warm-paper surface, IBM Plex + Space
+   Grotesk, and status color that MEANS state (signal-blue = reconciled/healthy,
+   red = held/fail-closed). Layered over Starlight's tokens.
+   ═══════════════════════════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
-/* ── Type ─────────────────────────────────────────────────────────────── */
 :root {
-  --sl-font: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+
+  --ink: #18181c;
+  --ink-2: #54545d;
+  --ink-3: #8a8a93;
+  --paper: #f4f3ef;
+  --panel: #ffffff;
+  --line: #e4e2da;
+  --line-2: #d3d0c6;
+  --signal: #2347e5;
+  --signal-2: #1a37c0;
+  --signal-tint: #e8ecff;
+  --hold: #cf3f38;
+  --hold-tint: #fbeae8;
+
+  --sl-font: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --sl-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-/* ── Accent (dark — default) ──────────────────────────────────────────── */
+/* ── Global accent (both themes read the signal blue) ───────────────────── */
 :root {
-  --sl-color-accent-low: #262450;
-  --sl-color-accent: #6b70f0;
-  --sl-color-accent-high: #c9ccff;
-  --sl-color-text-accent: #a5b4fc;
+  --sl-color-accent-low: #1b2560;
+  --sl-color-accent: #4f6cff;
+  --sl-color-accent-high: #cdd6ff;
+  --sl-color-text-accent: #9db0ff;
 }
+
+/* ── Docs LIGHT theme = the warm engineering surface ────────────────────── */
 :root[data-theme='light'] {
-  --sl-color-accent-low: #e6e7ff;
-  --sl-color-accent: #4f46e5;
-  --sl-color-accent-high: #2a2870;
-  --sl-color-text-accent: #4f46e5;
+  --sl-color-accent-low: var(--signal-tint);
+  --sl-color-accent: var(--signal);
+  --sl-color-accent-high: var(--signal-2);
+  --sl-color-text-accent: var(--signal);
+  --sl-color-white: var(--ink);
+  --sl-color-gray-1: #26262c;
+  --sl-color-gray-2: var(--ink-2);
+  --sl-color-gray-3: var(--ink-3);
+  --sl-color-gray-4: #b7b4aa;
+  --sl-color-gray-5: var(--line-2);
+  --sl-color-gray-6: var(--line);
+  --sl-color-gray-7: #efeee9;
+  --sl-color-black: var(--paper);
+  --sl-color-bg: var(--paper);
+  --sl-color-bg-nav: color-mix(in srgb, var(--paper) 82%, transparent);
+  --sl-color-bg-sidebar: color-mix(in srgb, var(--paper) 60%, #ffffff);
+  --sl-color-hairline: var(--line);
+  --sl-color-hairline-light: var(--line);
+  --sl-color-hairline-shade: var(--line);
 }
 
-h1, h2, h3,
-.sl-markdown-content h1, .sl-markdown-content h2 { letter-spacing: -0.02em; }
-
-/* ══════════════════════════════════════════════════════════════════════
-   HERO (Starlight splash)
-   ══════════════════════════════════════════════════════════════════════ */
-.hero { position: relative; }
-
-/* accent glow */
-.hero::before {
-  content: ''; position: absolute; inset: -30% -20% auto -20%; height: 560px;
-  z-index: -1; pointer-events: none;
-  background: radial-gradient(52% 55% at 50% 0%,
-    color-mix(in srgb, var(--sl-color-accent) 26%, transparent) 0%, transparent 72%);
+/* ── Docs DARK theme = refined ink (not the old neon-on-black) ───────────── */
+:root[data-theme='dark'] {
+  --sl-color-bg: #111318;
+  --sl-color-bg-nav: color-mix(in srgb, #111318 78%, transparent);
+  --sl-color-gray-6: #232733;
+  --sl-color-hairline: #232733;
 }
-/* dot grid */
-.hero::after {
-  content: ''; position: absolute; inset: -8% 0 auto; height: 680px; z-index: -2;
-  background-image: radial-gradient(circle,
-    color-mix(in srgb, var(--sl-color-gray-4) 34%, transparent) 1px, transparent 1px);
-  background-size: 26px 26px;
-  -webkit-mask-image: linear-gradient(180deg, black 18%, transparent 88%);
-  mask-image: linear-gradient(180deg, black 18%, transparent 88%);
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SPLASH SURFACE — force the light spec-sheet on landing + contact, whichever
+   way the docs theme toggle is set. (Landing components below also use their
+   own --ink/--paper props, so they're theme-proof regardless.)
+   ═══════════════════════════════════════════════════════════════════════════ */
+:root[data-has-hero] {
+  color-scheme: light;
+  --sl-color-accent: var(--signal);
+  --sl-color-accent-high: var(--signal-2);
+  --sl-color-text-accent: var(--signal);
+  --sl-color-white: var(--ink);
+  --sl-color-gray-1: #26262c;
+  --sl-color-gray-2: var(--ink-2);
+  --sl-color-gray-3: var(--ink-3);
+  --sl-color-gray-4: #b7b4aa;
+  --sl-color-gray-5: var(--line-2);
+  --sl-color-gray-6: var(--line);
+  --sl-color-gray-7: #efeee9;
+  --sl-color-black: var(--paper);
+  --sl-color-bg: var(--paper);
+  --sl-color-bg-nav: color-mix(in srgb, var(--paper) 82%, transparent);
+  --sl-color-text: var(--ink-2);
+  --sl-color-hairline: var(--line);
+  --sl-color-hairline-shade: var(--line);
 }
+[data-has-hero] .page { background: var(--paper); }
+[data-has-hero] header.header {
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: saturate(1.1) blur(8px);
+}
+
+/* ── Type ───────────────────────────────────────────────────────────────── */
+h1, h2, h3, h4,
+.sl-markdown-content h1, .sl-markdown-content h2, .sl-markdown-content h3 {
+  font-family: var(--display); letter-spacing: -0.02em; font-weight: 600;
+}
+.site-title { font-weight: 600; letter-spacing: -0.01em; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HERO (splash) — the poster: centered, on paper, over a faint blueprint grid.
+   ═══════════════════════════════════════════════════════════════════════════ */
+:root[data-has-hero] { --sl-content-width: 70rem; }
+[data-has-hero] .sl-markdown-content { max-width: 70rem !important; margin-inline: auto; }
+
+.hero { position: relative; padding-block: clamp(3rem, 7vw, 5.5rem) 1.5rem; }
+.hero::before {   /* blueprint dot-grid, fades out */
+  content: ''; position: absolute; inset: -40px 0 auto; height: 460px; z-index: -1;
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--ink) 12%, transparent) 1px, transparent 1px);
+  background-size: 30px 30px;
+  -webkit-mask-image: radial-gradient(70% 70% at 50% 30%, black 0%, transparent 72%);
+  mask-image: radial-gradient(70% 70% at 50% 30%, black 0%, transparent 72%);
+}
+[data-has-hero] .hero .copy { align-items: center !important; text-align: center !important; }
+[data-has-hero] .hero .actions { justify-content: center !important; margin-top: 2rem; }
 .hero h1 {
-  font-weight: 800; letter-spacing: -0.035em; line-height: 1.06;
-  max-width: 20ch; margin-inline: auto;
+  font-family: var(--display); font-weight: 700; letter-spacing: -0.035em;
+  line-height: 1.03; font-size: clamp(2.6rem, 6vw, 4.6rem); max-width: 15ch;
+  color: var(--ink); margin-inline: auto;
 }
 .hero .tagline {
-  color: var(--sl-color-gray-2); font-size: 1.16rem; line-height: 1.55; max-width: 54ch;
+  color: var(--ink-2); font-size: clamp(1.02rem, 1.6vw, 1.2rem); line-height: 1.6;
+  max-width: 60ch; margin-inline: auto;
 }
 .hero .actions a[class~='primary'] {
-  border: none;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--sl-color-accent) 88%, white), var(--sl-color-accent));
-  box-shadow: 0 8px 24px -8px color-mix(in srgb, var(--sl-color-accent) 65%, transparent);
+  border: none; color: #fff; font-weight: 600;
+  background: var(--signal);
+  box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--signal) 60%, transparent);
 }
-.hero .actions a[class~='primary']:hover { filter: brightness(1.06); }
+.hero .actions a[class~='primary']:hover { background: var(--signal-2); }
+.hero .actions a[class~='minimal'] {
+  color: var(--ink); border: 1px solid var(--line-2); background: var(--panel);
+}
+.hero .actions a[class~='minimal']:hover { border-color: var(--signal); color: var(--signal); }
 
-/* ══════════════════════════════════════════════════════════════════════
-   LANDING LAYOUT
-   ══════════════════════════════════════════════════════════════════════ */
-/* The splash column is widened in the landing-layout-fixes block at the end of
-   this file (78rem, with !important to beat Starlight's default). */
-.hero + * .landing, .landing { width: 100%; }
+/* Landing content sits document-left, not centered. */
+.landing { color: var(--ink-2); }
+.sl-markdown-content .landing :where(h2, h3, h4) { color: var(--ink); }
 
-/* Hide docs chrome on the splash page. */
-[data-has-hero] .content-panel + .content-panel .sl-markdown-content > footer,
-[data-has-hero] .pagination-links,
-[data-has-hero] footer.sl-flex .meta { display: none !important; }
+.sysline {
+  text-align: center; font-family: var(--sl-font-mono); font-size: .78rem;
+  color: var(--ink-3); letter-spacing: .02em; margin: 0 0 2.4rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SIGNATURE — the reconcile diptych (desired ⟷ observed)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.reconcile {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: stretch; gap: 0; margin: 0 auto; max-width: 62rem;
+}
+.rc-panel {
+  margin: 0; background: var(--panel); border: 1px solid var(--line);
+  border-radius: 14px; overflow: hidden; min-width: 0;
+  box-shadow: 0 1px 0 var(--line), 0 22px 44px -30px rgb(24 24 28 / .28);
+}
+.rc-panel figcaption {
+  display: flex; align-items: center; gap: .55rem;
+  font-family: var(--sl-font-mono); font-size: .82rem; color: var(--ink-2);
+  padding: .7rem .9rem; border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--paper) 55%, var(--panel));
+}
+.rc-panel figcaption code { background: none; color: var(--ink); padding: 0; font-size: .82rem; }
+.rc-tag {
+  font-family: var(--sl-font-mono); font-size: .66rem; font-weight: 600;
+  letter-spacing: .08em; padding: .2em .5em; border-radius: 5px;
+  color: #fff; background: var(--ink);
+}
+.rc-tag.observed { background: var(--signal); }
+
+/* code inside a panel: strip Expressive Code's own frame — the panel is the frame */
+.rc-panel .expressive-code { margin: 0; min-width: 0; }
+.rc-panel .expressive-code .frame {
+  border: none !important; border-radius: 0 !important; box-shadow: none !important;
+}
+.rc-panel .expressive-code pre { border: none !important; border-radius: 0 !important; background: var(--panel) !important; }
+
+/* observed = a live status readout */
+.rc-status { margin: 0; padding: .55rem .3rem; font-family: var(--sl-font-mono); font-size: .85rem; }
+.rc-status > div {
+  display: grid; grid-template-columns: 6.6rem 1fr; align-items: baseline;
+  gap: .5rem; padding: .32rem .9rem; border-radius: 6px;
+}
+.rc-status dt { color: var(--ink-3); font-size: .72rem; letter-spacing: .03em; }
+.rc-status dd { margin: 0; color: var(--ink); }
+.rc-status dd.url { color: var(--signal); word-break: break-all; }
+.rc-status dd .muted { color: var(--ink-3); }
+.rc-status .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: .5em; vertical-align: middle; }
+.rc-status dd.ok .dot { background: var(--signal); box-shadow: 0 0 0 3px var(--signal-tint); }
+.rc-status dd.hold { color: var(--hold); }
+.rc-status dd.hold .dot { background: var(--hold); box-shadow: 0 0 0 3px var(--hold-tint); }
+.rc-foot {
+  margin: .2rem 0 0; padding: .9rem 1.1rem 1.1rem; border-top: 1px dashed var(--line-2);
+  font-size: .82rem; line-height: 1.5; color: var(--ink-2);
+}
+.rc-foot code { font-size: .8em; color: var(--hold); background: var(--hold-tint); padding: .1em .4em; border-radius: 4px; }
+
+/* the reconcile loop between the panels */
+.rc-loop {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .5rem; width: 4.6rem; color: var(--signal);
+}
+.rc-loop svg { transition: transform .5s cubic-bezier(.4,0,.2,1); }
+.reconcile:hover .rc-loop svg { transform: rotate(180deg); }
+.rc-loop span { font-family: var(--sl-font-mono); font-size: .68rem; color: var(--ink-3); letter-spacing: .04em; }
+
+/* status settles in on load (desired → observed converging) */
+@keyframes rc-settle { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+.rc-status > div { animation: rc-settle .5s both; }
+.rc-status > div:nth-child(1) { animation-delay: .05s; }
+.rc-status > div:nth-child(2) { animation-delay: .12s; }
+.rc-status > div:nth-child(3) { animation-delay: .19s; }
+.rc-status > div:nth-child(4) { animation-delay: .26s; }
+.rc-status > div:nth-child(5) { animation-delay: .33s; }
+.rc-status > div:nth-child(6) { animation-delay: .40s; }
+.rc-status > div:nth-child(7) { animation-delay: .47s; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DATASHEET SECTIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+.band { padding-block: clamp(3rem, 6vw, 5rem); border-top: 1px solid var(--line); }
+.reconcile + .band, .sysline + .reconcile { }   /* rhythm handled per-element */
 
 .eyebrow {
-  font-size: .76rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase;
-  color: var(--sl-color-text-accent); margin: 0 0 .6rem;
+  font-family: var(--sl-font-mono); font-size: .78rem; font-weight: 500;
+  color: var(--signal); letter-spacing: .01em; margin: 0 0 1rem;
 }
-.eyebrow.center { text-align: center; margin-top: 1.5rem; opacity: .9; }
-
-/* Section rhythm + hairline separators */
-.band {
-  padding-block: clamp(3.5rem, 7vw, 6.5rem);
-  border-top: 1px solid var(--sl-color-gray-6);
+.band > h2 {
+  font-family: var(--display); font-size: clamp(1.6rem, 3.2vw, 2.35rem);
+  font-weight: 600; letter-spacing: -0.025em; line-height: 1.1;
+  margin: 0 0 1rem; max-width: 24ch; color: var(--ink);
 }
-.band > h2 { font-size: clamp(1.7rem, 3.4vw, 2.3rem); font-weight: 800; margin-top: 0; max-width: 22ch; }
-.band > p { max-width: 64ch; color: var(--sl-color-gray-2); font-size: 1.03rem; line-height: 1.65; }
+.band > p { max-width: 62ch; color: var(--ink-2); line-height: 1.65; font-size: 1.02rem; }
+.band code { font-family: var(--sl-font-mono); }
 
-/* ── Showcase (the YAML → running-agent tabs) ─────────────────────────── */
-.showcase { max-width: 860px; margin: 2.2rem auto 0; }
-.showcase-caption {
-  text-align: center; color: var(--sl-color-gray-3); font-size: .95rem;
-  max-width: 60ch; margin: 1.1rem auto 0;
-}
-
-/* Elevate Expressive Code frames with a faint accent ring. */
-.expressive-code .frame {
-  border-radius: 12px;
-  box-shadow: 0 24px 60px -28px rgb(0 0 0 / .55),
-              0 0 0 1px color-mix(in srgb, var(--sl-color-accent) 18%, transparent);
-}
-
-/* ── The concern → resource mapping ───────────────────────────────────── */
-.mapping { margin-top: 2rem; display: grid; gap: 0; }
-.mapping > div {
+/* ── Spec table (the concern → resource pinout) ─────────────────────────── */
+.spec-table { margin: 2rem 0 0; border-top: 1px solid var(--line); }
+.spec-table > div {
   display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: center;
-  padding: .85rem 0; border-top: 1px solid var(--sl-color-gray-6);
+  padding: .8rem .2rem; border-bottom: 1px solid var(--line);
 }
-.mapping > div:last-child { border-bottom: 1px solid var(--sl-color-gray-6); }
-.mapping span { color: var(--sl-color-gray-2); }
-.mapping code {
-  font-size: .82rem; padding: .28em .6em; border-radius: 7px; white-space: nowrap;
-  color: var(--sl-color-text-accent);
-  background: color-mix(in srgb, var(--sl-color-accent) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--sl-color-accent) 34%, transparent);
+.spec-table dt { color: var(--ink-2); font-size: .98rem; }
+.spec-table dd { margin: 0; display: flex; align-items: center; gap: .6rem; }
+.spec-table dd .muted { font-family: var(--sl-font-mono); font-size: .74rem; color: var(--ink-3); }
+.spec-table code {
+  font-family: var(--sl-font-mono); font-size: .82rem; padding: .3em .6em; border-radius: 6px;
+  white-space: nowrap; color: var(--signal-2);
+  background: var(--signal-tint); border: 1px solid color-mix(in srgb, var(--signal) 22%, transparent);
 }
 
-/* ── Feature rows (text + artifact, alternating) ──────────────────────── */
-.feature-row { display: grid; grid-template-columns: 1fr 1.05fr; gap: 3rem; align-items: center; }
+/* ── Feature rows (copy + manifest, alternating) ────────────────────────── */
+.feature-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 3rem; align-items: center; }
+.feature-copy { min-width: 0; }
 .feature-row.reverse > .feature-copy { order: 2; }
-.feature-copy h3 { font-size: clamp(1.35rem, 2.6vw, 1.8rem); font-weight: 750; margin-top: .3rem; }
-.feature-copy p { color: var(--sl-color-gray-2); line-height: 1.65; }
-.feature-links { font-size: .95rem; }
-.feature-row .expressive-code { margin: 0; }
+.feature-copy h3 { font-family: var(--display); font-size: clamp(1.3rem, 2.4vw, 1.7rem); font-weight: 600; letter-spacing: -0.02em; margin: 0 0 .9rem; color: var(--ink); }
+.feature-copy p { color: var(--ink-2); line-height: 1.65; }
+.feature-copy code { font-family: var(--sl-font-mono); font-size: .86em; padding: .1em .35em; border-radius: 4px; background: color-mix(in srgb, var(--paper) 40%, var(--line)); color: var(--ink); }
+.feature-links { font-family: var(--sl-font-mono); font-size: .85rem !important; }
+.hold-text code { color: var(--hold) !important; background: var(--hold-tint) !important; }
+.feature-row .expressive-code { margin: 0; min-width: 0; }
+/* No code block may stretch the layout — long lines scroll inside their frame. */
+.landing .expressive-code, .landing .expressive-code .frame, .landing .expressive-code pre { min-width: 0; max-width: 100%; }
 
-/* ── Bento ────────────────────────────────────────────────────────────── */
-.bento { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; }
-.bento-card {
-  padding: 1.4rem 1.5rem; border-radius: 14px;
-  border: 1px solid var(--sl-color-gray-5);
-  background: color-mix(in srgb, var(--sl-color-gray-6) 45%, transparent);
+/* ── Rollout ladder (a real, ordered sequence — numbering earns its keep) ── */
+.ladder { list-style: none; margin: 2.2rem 0 0; padding: 0; display: grid; gap: 0; counter-reset: none; }
+.ladder li {
+  display: grid; grid-template-columns: 3.4rem 1fr; gap: 1.2rem; align-items: start;
+  padding: 1.2rem 0; border-top: 1px solid var(--line);
+}
+.ladder li:last-child { border-bottom: 1px solid var(--line); }
+.ladder .step {
+  font-family: var(--sl-font-mono); font-size: 1.1rem; font-weight: 600; color: var(--signal);
+}
+.ladder h4 { font-family: var(--display); font-size: 1.08rem; font-weight: 600; margin: 0 0 .3rem; color: var(--ink); }
+.ladder p { margin: 0; color: var(--ink-2); font-size: .96rem; line-height: 1.6; max-width: 60ch; }
+
+/* ── Capability cards ───────────────────────────────────────────────────── */
+.grid-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 2rem; }
+.grid-cards article {
+  padding: 1.4rem 1.6rem; border: 1px solid var(--line); border-radius: 12px; background: var(--panel);
   transition: border-color .16s ease, transform .16s ease, box-shadow .16s ease;
 }
-.bento-card.wide { grid-column: span 2; }
-.bento-card:hover {
-  border-color: color-mix(in srgb, var(--sl-color-accent) 55%, var(--sl-color-gray-5));
-  transform: translateY(-2px);
-  box-shadow: 0 14px 34px -18px color-mix(in srgb, var(--sl-color-accent) 45%, transparent);
+.grid-cards article:hover {
+  border-color: color-mix(in srgb, var(--signal) 45%, var(--line));
+  transform: translateY(-2px); box-shadow: 0 16px 34px -22px rgb(24 24 28 / .3);
 }
-.bento-card h3 { margin: 0 0 .4rem; font-size: 1.08rem; }
-.bento-card p { margin: 0; color: var(--sl-color-gray-3); font-size: .95rem; line-height: 1.55; }
-.bento-card code { font-size: .85em; color: var(--sl-color-text-accent); }
+.grid-cards h3 { font-family: var(--display); font-size: 1.06rem; font-weight: 600; margin: 0 0 .45rem; color: var(--ink); }
+.grid-cards p { margin: 0; color: var(--ink-2); font-size: .94rem; line-height: 1.55; }
+.grid-cards code { font-family: var(--sl-font-mono); font-size: .84em; color: var(--signal-2); }
 
-/* ── Stack band ───────────────────────────────────────────────────────── */
-.stack-title { margin-top: 3rem !important; font-weight: 700; color: var(--sl-color-white) !important; }
-.stack { list-style: none; padding: 0; margin: 1.2rem 0 0; display: flex; flex-wrap: wrap; gap: .6rem; }
+/* ── Stack band ─────────────────────────────────────────────────────────── */
+.stack-band { text-align: center; }
+.stack { list-style: none; padding: 0; margin: 1.4rem 0 0; display: flex; flex-wrap: wrap; gap: .55rem; justify-content: center; }
 .stack li {
-  font-size: .86rem; padding: .4em .85em; border-radius: 999px;
-  color: var(--sl-color-gray-2);
-  border: 1px solid var(--sl-color-gray-5);
-  background: color-mix(in srgb, var(--sl-color-gray-6) 40%, transparent);
-  transition: border-color .15s ease, color .15s ease;
+  font-family: var(--sl-font-mono); font-size: .82rem; padding: .38em .8em; border-radius: 7px;
+  color: var(--ink-2); background: var(--panel); border: 1px solid var(--line);
 }
-.stack li:hover { border-color: color-mix(in srgb, var(--sl-color-accent) 55%, transparent); color: var(--sl-color-white); }
+.stack-note { max-width: none !important; text-align: center; margin: 1.4rem auto 0; color: var(--ink-3) !important; font-size: .95rem !important; }
 
-/* ── CTA band ─────────────────────────────────────────────────────────── */
-.band.cta { text-align: center; position: relative; }
-.band.cta::before {
-  content: ''; position: absolute; inset: auto -20% -40%; height: 420px; z-index: -1; pointer-events: none;
-  background: radial-gradient(50% 60% at 50% 100%,
-    color-mix(in srgb, var(--sl-color-accent) 22%, transparent) 0%, transparent 72%);
+/* ── CTA ────────────────────────────────────────────────────────────────── */
+.band.cta {
+  text-align: center; margin-top: clamp(3rem, 6vw, 5rem);
+  border-radius: 18px; border: 1px solid var(--line-2);
+  background:
+    radial-gradient(60% 100% at 50% 0%, color-mix(in srgb, var(--signal) 8%, transparent), transparent 70%),
+    var(--panel);
+  padding: clamp(3rem, 6vw, 4.5rem) 1.5rem;
 }
-.band.cta > h2 { margin-inline: auto; }
+.band.cta > h2 { max-width: 20ch; margin: 0 auto 1rem; }
 .band.cta > p { margin-inline: auto; }
-.cta-actions { display: flex; gap: .8rem; justify-content: center; margin-top: 1.6rem; flex-wrap: wrap; }
+.cta-actions { display: flex; gap: .8rem; justify-content: center; margin-top: 1.8rem; flex-wrap: wrap; }
 
-/* ── Existing docs cards (Card component, used elsewhere) ──────────────── */
-.card {
-  border: 1px solid var(--sl-color-gray-5); border-radius: 14px;
-  background: color-mix(in srgb, var(--sl-color-gray-6) 45%, transparent);
+/* ═══════════════════════════════════════════════════════════════════════════
+   EXPRESSIVE CODE — manifests read as crisp light documents
+   ═══════════════════════════════════════════════════════════════════════════ */
+[data-has-hero] .expressive-code .frame {
+  border-radius: 12px; border: 1px solid var(--line);
+  box-shadow: 0 18px 40px -30px rgb(24 24 28 / .3);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CONTACT PAGE  (same surface, quiet)
+   ═══════════════════════════════════════════════════════════════════════════ */
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2.6rem auto 0; max-width: 52rem; }
+.contact-grid article {
+  padding: 1.6rem 1.75rem; border: 1px solid var(--line); border-radius: 12px; background: var(--panel);
   transition: border-color .16s ease, transform .16s ease, box-shadow .16s ease;
 }
-.card:hover {
-  border-color: color-mix(in srgb, var(--sl-color-accent) 55%, var(--sl-color-gray-5));
-  transform: translateY(-2px);
-  box-shadow: 0 14px 34px -16px color-mix(in srgb, var(--sl-color-accent) 45%, transparent);
-}
-.card .icon { color: var(--sl-color-accent); background: color-mix(in srgb, var(--sl-color-accent) 14%, transparent); }
-
-/* ── Chrome polish ────────────────────────────────────────────────────── */
-.site-title { font-weight: 700; letter-spacing: -0.01em; }
-header.header { border-bottom: 1px solid var(--sl-color-gray-6); }
-.sl-markdown-content a:not(:where(.not-content *)) { text-underline-offset: 0.2em; }
-
-/* ── Responsive ───────────────────────────────────────────────────────── */
-@media (max-width: 60rem) {
-  .feature-row { grid-template-columns: 1fr; gap: 1.5rem; }
-  .feature-row.reverse > .feature-copy { order: 0; }
-  .bento { grid-template-columns: 1fr; }
-  .bento-card.wide { grid-column: span 1; }
-  .mapping > div { grid-template-columns: 1fr; gap: .5rem; }
-  .mapping code { justify-self: start; }
-}
-
-/* ── Landing layout fixes (screenshot-driven; !important to beat Starlight) ─ */
-/* Widen the splash content column (default ~45rem left huge empty gutters). */
-:root[data-has-hero] { --sl-content-width: 78rem !important; }
-[data-has-hero] .sl-markdown-content { max-width: 78rem !important; margin-inline: auto; }
-
-/* Center the hero. Its copy is a FLEX column (.sl-flex.copy), so text-align alone
-   can't center it — center the flex + text, and center the action row. */
-[data-has-hero] .hero .copy { align-items: center !important; text-align: center !important; }
-[data-has-hero] .hero .actions { justify-content: center !important; }
-[data-has-hero] .hero .tagline { margin-inline: auto; }
-
-/* Center section headers + intro copy so bands read as a landing, not prose.
-   Starlight wraps every markdown heading in .sl-heading-wrapper, so the h2 is
-   never a direct child of .band — center the WRAPPER. Direct-child > excludes
-   the two-column feature rows (their heading lives in .feature-copy). */
-.band > .sl-heading-wrapper { justify-content: center; text-align: center; }
-.band > h2, .band > p { text-align: center; margin-inline: auto; }
-/* …but keep the deep-dive feature rows left-aligned (they're two-column). */
-.feature-row .feature-copy, .feature-row .feature-copy * { text-align: left; }
-/* Give the whole landing more vertical breathing room at the top. */
-[data-has-hero] .hero { padding-block: clamp(3rem, 7vw, 6rem) 2rem; }
-
-/* ══════════════════════════════════════════════════════════════════════
-   CONTACT PAGE  (reuses the bento-card look for consistency)
-   ══════════════════════════════════════════════════════════════════════ */
-.contact-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
-  margin: 2.6rem auto 0; max-width: 52rem;
-}
-.contact-grid .bento-card { padding: 1.6rem 1.75rem; }
-.contact-grid .bento-card h3 { margin-bottom: .5rem; font-size: 1.2rem; }
-.contact-grid .bento-card p { color: var(--sl-color-gray-2); }
-.contact-link { margin: 1rem 0 0 !important; font-weight: 600; }
-.contact-link a { color: var(--sl-color-text-accent); }
-
+.contact-grid article:hover { border-color: color-mix(in srgb, var(--signal) 45%, var(--line)); transform: translateY(-2px); box-shadow: 0 16px 34px -22px rgb(24 24 28 / .3); }
+.contact-grid h3 { font-family: var(--display); margin-bottom: .5rem; font-size: 1.15rem; color: var(--ink); }
+.contact-grid p { color: var(--ink-2); }
+.contact-link { margin: 1rem 0 0 !important; font-family: var(--sl-font-mono); font-weight: 500; font-size: .92rem; }
+.contact-link a { color: var(--signal); }
 .contact-cta { display: flex; gap: .8rem; justify-content: center; flex-wrap: wrap; margin-top: 1.8rem; }
 .contact-button {
   display: inline-flex; align-items: center; font-weight: 600; font-size: .95rem;
-  padding: .72em 1.35em; border-radius: 10px; text-decoration: none; color: #fff;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--sl-color-accent) 88%, white), var(--sl-color-accent));
-  box-shadow: 0 8px 24px -8px color-mix(in srgb, var(--sl-color-accent) 65%, transparent);
-  transition: filter .15s ease, border-color .15s ease;
+  padding: .72em 1.35em; border-radius: 9px; text-decoration: none; color: #fff;
+  background: var(--signal); box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--signal) 60%, transparent);
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
 }
-.contact-button:hover { filter: brightness(1.06); }
-.contact-button.minimal {
-  background: transparent; color: var(--sl-color-white);
-  border: 1px solid var(--sl-color-gray-5); box-shadow: none;
-}
-.contact-button.minimal:hover {
-  filter: none; border-color: color-mix(in srgb, var(--sl-color-accent) 55%, var(--sl-color-gray-5));
+.contact-button:hover { background: var(--signal-2); }
+.contact-button.minimal { background: var(--panel); color: var(--ink); border: 1px solid var(--line-2); box-shadow: none; }
+.contact-button.minimal:hover { border-color: var(--signal); color: var(--signal); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CHROME + A11Y + RESPONSIVE
+   ═══════════════════════════════════════════════════════════════════════════ */
+.sl-markdown-content a:not(:where(.not-content *)) { text-underline-offset: .2em; }
+
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--signal); outline-offset: 2px; border-radius: 3px;
 }
 
-@media (max-width: 40rem) {
+@media (prefers-reduced-motion: reduce) {
+  .rc-status > div { animation: none; }
+  .rc-loop svg, .grid-cards article, .contact-grid article { transition: none; }
+  .reconcile:hover .rc-loop svg { transform: none; }
+}
+
+@media (max-width: 60rem) {
+  .reconcile { grid-template-columns: minmax(0, 1fr); max-width: 34rem; }
+  .rc-loop { width: auto; flex-direction: row; padding: .9rem 0; }
+  .reconcile:hover .rc-loop svg { transform: rotate(90deg); }
+  .feature-row { grid-template-columns: minmax(0, 1fr); gap: 1.4rem; }
+  .feature-row.reverse > .feature-copy { order: 0; }
+  .grid-cards { grid-template-columns: minmax(0, 1fr); }
   .contact-grid { grid-template-columns: 1fr; }
+  .spec-table > div { grid-template-columns: 1fr; gap: .5rem; }
+  .spec-table dd { justify-self: start; }
+}
+
+/* Phones: the poster type has to shrink to fit, and nothing may overflow-x. */
+@media (max-width: 34rem) {
+  .hero { padding-block: 2.5rem 1rem; }
+  .hero h1 { font-size: 1.95rem; line-height: 1.08; max-width: 100%; }
+  .hero .tagline { font-size: 1rem; }
+  .hero .actions { flex-wrap: wrap; }
+  .reconcile { max-width: 100%; }
+  .rc-status > div { grid-template-columns: 4.8rem 1fr; padding-inline: .55rem; }
+  .rc-status dd.url { overflow-wrap: anywhere; }
+  .band > h2 { font-size: 1.5rem; }
+  .ladder li { grid-template-columns: 2.6rem 1fr; gap: .8rem; }
+  .stack { gap: .4rem; }
 }
