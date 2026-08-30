@@ -203,9 +203,47 @@ header.header { border-bottom: 1px solid var(--sl-color-gray-6); }
 [data-has-hero] .hero .actions { justify-content: center !important; }
 [data-has-hero] .hero .tagline { margin-inline: auto; }
 
-/* Center section headers + intro copy so bands read as a landing, not prose. */
+/* Center section headers + intro copy so bands read as a landing, not prose.
+   Starlight wraps every markdown heading in .sl-heading-wrapper, so the h2 is
+   never a direct child of .band — center the WRAPPER. Direct-child > excludes
+   the two-column feature rows (their heading lives in .feature-copy). */
+.band > .sl-heading-wrapper { justify-content: center; text-align: center; }
 .band > h2, .band > p { text-align: center; margin-inline: auto; }
 /* …but keep the deep-dive feature rows left-aligned (they're two-column). */
 .feature-row .feature-copy, .feature-row .feature-copy * { text-align: left; }
 /* Give the whole landing more vertical breathing room at the top. */
 [data-has-hero] .hero { padding-block: clamp(3rem, 7vw, 6rem) 2rem; }
+
+/* ══════════════════════════════════════════════════════════════════════
+   CONTACT PAGE  (reuses the bento-card look for consistency)
+   ══════════════════════════════════════════════════════════════════════ */
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  margin: 2.6rem auto 0; max-width: 52rem;
+}
+.contact-grid .bento-card { padding: 1.6rem 1.75rem; }
+.contact-grid .bento-card h3 { margin-bottom: .5rem; font-size: 1.2rem; }
+.contact-grid .bento-card p { color: var(--sl-color-gray-2); }
+.contact-link { margin: 1rem 0 0 !important; font-weight: 600; }
+.contact-link a { color: var(--sl-color-text-accent); }
+
+.contact-cta { display: flex; gap: .8rem; justify-content: center; flex-wrap: wrap; margin-top: 1.8rem; }
+.contact-button {
+  display: inline-flex; align-items: center; font-weight: 600; font-size: .95rem;
+  padding: .72em 1.35em; border-radius: 10px; text-decoration: none; color: #fff;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--sl-color-accent) 88%, white), var(--sl-color-accent));
+  box-shadow: 0 8px 24px -8px color-mix(in srgb, var(--sl-color-accent) 65%, transparent);
+  transition: filter .15s ease, border-color .15s ease;
+}
+.contact-button:hover { filter: brightness(1.06); }
+.contact-button.minimal {
+  background: transparent; color: var(--sl-color-white);
+  border: 1px solid var(--sl-color-gray-5); box-shadow: none;
+}
+.contact-button.minimal:hover {
+  filter: none; border-color: color-mix(in srgb, var(--sl-color-accent) 55%, var(--sl-color-gray-5));
+}
+
+@media (max-width: 40rem) {
+  .contact-grid { grid-template-columns: 1fr; }
+}
