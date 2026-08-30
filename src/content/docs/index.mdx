@@ -1,0 +1,56 @@
+---
+title: ctxmesh
+description: The Kubernetes-native platform for building, governing, and operating AI agents at scale.
+template: splash
+hero:
+  tagline: Build, govern, and operate AI agents on Kubernetes — declaratively, with guardrails, evals, and deep observability built in.
+  actions:
+    - text: Get started
+      link: /getting-started/introduction/
+      icon: right-arrow
+    - text: Concepts
+      link: /concepts/architecture/
+      icon: open-book
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Agents as first-class Kubernetes resources
+
+ctxmesh turns an AI agent into a declarative, governed, observable workload. You describe an
+agent as a Kubernetes resource; the platform handles serving, model routing, guardrails,
+human-in-the-loop approvals, eval-gated rollout, feedback, cost, and tracing — the operational
+substance that turns a prototype into production.
+
+<CardGrid stagger>
+	<Card title="Declarative agents" icon="rocket">
+		Ship an agent as an `AgentDeployment` custom resource — image, model route, tools,
+		memory, and scaling in one spec. No bespoke glue.
+	</Card>
+	<Card title="Governance built in" icon="approve-check">
+		`GuardrailPolicy` (PII / denylist / LLM-judge), declarative `ApprovalPolicy` for
+		human-in-the-loop tool gating, and per-tenant budgets — enforced fail-closed.
+	</Card>
+	<Card title="Eval-gated rollout" icon="random">
+		Promote on a passing `EvalSuite`, canary a candidate with a traffic split, and
+		auto-progress or auto-roll-back on the online score.
+	</Card>
+	<Card title="Deep observability" icon="chart-line">
+		The step → tool → model causal tree, cost, and feedback — without instrumenting your
+		code, via base-image auto-instrumentation and launcher-traced endpoints.
+	</Card>
+	<Card title="Feedback → improvement" icon="comment">
+		Correlate human, judge, and external feedback to traces with a `FeedbackStore`, and
+		fold it into the online score that gates the next release.
+	</Card>
+	<Card title="Multi-tenant & Kubernetes-native" icon="setting">
+		Namespaced isolation, RBAC-scoped access, and standard operator conventions — it runs
+		where your platform already runs.
+	</Card>
+</CardGrid>
+
+## Next step
+
+New here? Start with the [Introduction](/getting-started/introduction/), then deploy your first
+agent in the [Quickstart](/getting-started/quickstart/).
