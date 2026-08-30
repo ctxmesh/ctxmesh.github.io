@@ -63,8 +63,8 @@ h1, h2, h3,
 /* ══════════════════════════════════════════════════════════════════════
    LANDING LAYOUT
    ══════════════════════════════════════════════════════════════════════ */
-/* Widen the splash column so bands can breathe like a landing, not a doc. */
-:root[data-has-hero] { --sl-content-width: 74rem; }
+/* The splash column is widened in the landing-layout-fixes block at the end of
+   this file (78rem, with !important to beat Starlight's default). */
 .hero + * .landing, .landing { width: 100%; }
 
 /* Hide docs chrome on the splash page. */
@@ -191,3 +191,21 @@ header.header { border-bottom: 1px solid var(--sl-color-gray-6); }
   .mapping > div { grid-template-columns: 1fr; gap: .5rem; }
   .mapping code { justify-self: start; }
 }
+
+/* ── Landing layout fixes (screenshot-driven; !important to beat Starlight) ─ */
+/* Widen the splash content column (default ~45rem left huge empty gutters). */
+:root[data-has-hero] { --sl-content-width: 78rem !important; }
+[data-has-hero] .sl-markdown-content { max-width: 78rem !important; margin-inline: auto; }
+
+/* Center the hero. Its copy is a FLEX column (.sl-flex.copy), so text-align alone
+   can't center it — center the flex + text, and center the action row. */
+[data-has-hero] .hero .copy { align-items: center !important; text-align: center !important; }
+[data-has-hero] .hero .actions { justify-content: center !important; }
+[data-has-hero] .hero .tagline { margin-inline: auto; }
+
+/* Center section headers + intro copy so bands read as a landing, not prose. */
+.band > h2, .band > p { text-align: center; margin-inline: auto; }
+/* …but keep the deep-dive feature rows left-aligned (they're two-column). */
+.feature-row .feature-copy, .feature-row .feature-copy * { text-align: left; }
+/* Give the whole landing more vertical breathing room at the top. */
+[data-has-hero] .hero { padding-block: clamp(3rem, 7vw, 6rem) 2rem; }
