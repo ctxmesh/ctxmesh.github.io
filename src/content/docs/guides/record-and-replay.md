@@ -7,7 +7,7 @@ description: "Capture a run's model + tool I/O as a portable fixture, then repla
 **both** channels mocked, the same agent image, and zero provider calls or cluster dependencies — so a
 regression test runs in CI for free.
 
-**Prerequisites:** an agent deployed ([Deploy an agent](/guides/deploy-an-agent/)); the `agent-engine` CLI
+**Prerequisites:** an agent deployed ([Deploy an agent](/guides/deploy-an-agent/)); the `agentry` CLI
 on your `PATH`; a durable object store configured (record mode writes the fixture there — see
 [Failure modes](#failure-modes)).
 
@@ -82,7 +82,7 @@ Merge the run's partial blobs (the model channel + the tool channel) into one lo
 # The object store is read from the environment, exactly as the recorder wrote it:
 export OBJECT_STORE_ADDR=…  OBJECT_STORE_ACCESS_KEY=…  OBJECT_STORE_SECRET_KEY=…
 
-agent-engine download-fixture run-abc123
+agentry download-fixture run-abc123
 # writes ./run-abc123.fixture.json (0600 — sensitive-by-default, do NOT commit it)
 ```
 
@@ -96,7 +96,7 @@ Replay swaps the gateway for a both-channel mock driven by the fixture, runs the
 completion, and reports:
 
 ```bash
-agent-engine dev --replay run-abc123.fixture.json
+agentry dev --replay run-abc123.fixture.json
 # model calls  → the Nth recorded model response, byte-identical (SSE re-served verbatim)
 # tool calls   → recorded tool results, matched by call-id / name+args
 ```
@@ -116,7 +116,7 @@ behavior" without reading logs:
   unrecorded tool call (`tool_call_unrecorded`) — a hard fail with a comprehensible report.
 
 ```bash
-agent-engine dev --replay run-abc123.fixture.json
+agentry dev --replay run-abc123.fixture.json
 echo "replay exit: $?"   # 0 pass · 1 agent failed · 2 behavior diverged
 ```
 

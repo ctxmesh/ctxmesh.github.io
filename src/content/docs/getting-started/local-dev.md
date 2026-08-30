@@ -1,10 +1,10 @@
 ---
 title: Local development
-description: "The agent-engine dev inner loop (with --ui) against the mock provider — build and test with zero cloud."
+description: "The agentry dev inner loop (with --ui) against the mock provider — build and test with zero cloud."
 ---
 
 You don't need a cluster, a cloud key, or the full platform to build and iterate on an agent. The
-`agent-engine dev` command runs the **same launcher and runtime contract** your agent will meet in
+`agentry dev` command runs the **same launcher and runtime contract** your agent will meet in
 production — locally, against a deterministic mock model — so you can develop the whole inner loop with
 zero cloud spend. This page is the how-to; the [architecture](/concepts/architecture/) explains what
 you're running.
@@ -21,7 +21,7 @@ cluster, minus the cloud.
 From a directory with an `agent.yaml`:
 
 ```bash
-agent-engine dev                 # runs ./agent.yaml against the mock provider on :8080
+agentry dev                 # runs ./agent.yaml against the mock provider on :8080
 ```
 
 `dev` renders the stack, brings it up, and runs a readiness smoke. Then talk to your agent:
@@ -51,7 +51,7 @@ Useful flags (see the full [CLI reference](/reference/cli/)):
 Add `--ui` to serve the console alongside the loop — no login wall, no cluster:
 
 ```bash
-agent-engine dev --ui --ui-port 8888
+agentry dev --ui --ui-port 8888
 ```
 
 This starts a **dev-mode BFF** bound to loopback only (`127.0.0.1`, a deliberate security property — it
@@ -64,7 +64,7 @@ The SPA must be built first:
 
 ```bash
 make build-ui                    # builds the console into ui/dist
-agent-engine dev --ui --ui-port 8888
+agentry dev --ui --ui-port 8888
 ```
 
 ## Test against a real provider (optional)
@@ -73,7 +73,7 @@ When you want a real model in the loop, switch the gateway backend — the key i
 **gateway container only**, never onto your agent's disk or into its environment:
 
 ```bash
-agent-engine dev --provider real --key-env OPENAI_API_KEY --model openai/gpt-4o-mini
+agentry dev --provider real --key-env OPENAI_API_KEY --model openai/gpt-4o-mini
 ```
 
 ## Replay a recorded run (deterministic, zero cloud)
@@ -83,7 +83,7 @@ channels mocked** — model *and* tool I/O come from the recording, so you can r
 deterministically with no cluster and no keys:
 
 ```bash
-agent-engine dev --replay ./fixture.json
+agentry dev --replay ./fixture.json
 ```
 
 Replay is **lenient on request bytes** (a drifted timestamp still serves the recorded response, with a
