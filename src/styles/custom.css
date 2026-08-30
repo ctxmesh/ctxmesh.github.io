@@ -1,46 +1,73 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    ctxmesh — "Manifest & Reconcile"
-   An engineering spec-sheet identity: warm-paper surface, IBM Plex + Space
-   Grotesk, and status color that MEANS state (signal-blue = reconciled/healthy,
-   red = held/fail-closed). Layered over Starlight's tokens.
+   An engineering spec-sheet identity, DARK by default ("the datasheet printed
+   in negative" — warm ink, matte, no glows), light as a toggle. IBM Plex +
+   Space Grotesk, and status color that MEANS state (signal-blue = reconciled/
+   healthy, red = held/fail-closed). Layered over Starlight's tokens.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 :root {
   --display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --sl-font: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --sl-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
 
+/* ── DARK (default) — "the datasheet, printed in negative": warm ink, matte,
+      no glows. The page becomes the ink; the text becomes the paper. ──────── */
+:root, :root[data-theme='dark'] {
+  --paper: #151412;   /* page surface — warm near-black */
+  --panel: #1d1b18;   /* raised card/panel — one quiet step up */
+  --ink: #eeece5;     /* primary text — the light paper, in negative */
+  --ink-2: #a39f94;   /* secondary / muted */
+  --ink-3: #6f6c63;   /* tertiary / labels */
+  --line: #2b2924;    /* hairline */
+  --line-2: #3a372f;  /* stronger rule / panel border */
+  --signal: #5e7dfd;      /* healthy/promoted — lit LED (brighter than light-mode) */
+  --signal-2: #97a8ff;    /* text-safe signal — links, small mono */
+  --signal-tint: rgba(94, 125, 253, 0.10);
+  --hold: #e2574c;        /* held / fail-closed */
+  --hold-2: #ff9086;      /* text-safe hold */
+  --hold-tint: rgba(226, 87, 76, 0.09);
+
+  --sl-color-white: var(--ink);
+  --sl-color-gray-1: #d9d6cd;
+  --sl-color-gray-2: var(--ink-2);
+  --sl-color-gray-3: var(--ink-3);
+  --sl-color-gray-4: #565349;
+  --sl-color-gray-5: var(--line-2);
+  --sl-color-gray-6: var(--line);
+  --sl-color-gray-7: #1a1916;
+  --sl-color-black: var(--paper);
+  --sl-color-bg: var(--paper);
+  --sl-color-bg-nav: color-mix(in srgb, var(--paper) 78%, transparent);
+  --sl-color-bg-sidebar: color-mix(in srgb, var(--paper) 72%, #000);
+  --sl-color-accent-low: #1c2440;
+  --sl-color-accent: var(--signal);
+  --sl-color-accent-high: var(--signal-2);
+  --sl-color-text-accent: var(--signal-2);
+  --sl-color-hairline: var(--line);
+  --sl-color-hairline-light: var(--line);
+  --sl-color-hairline-shade: var(--line);
+}
+
+/* ── LIGHT (toggle) — the warm-paper spec-sheet ─────────────────────────── */
+:root[data-theme='light'] {
+  --paper: #f4f3ef;
+  --panel: #ffffff;
   --ink: #18181c;
   --ink-2: #54545d;
   --ink-3: #8a8a93;
-  --paper: #f4f3ef;
-  --panel: #ffffff;
   --line: #e4e2da;
   --line-2: #d3d0c6;
   --signal: #2347e5;
   --signal-2: #1a37c0;
   --signal-tint: #e8ecff;
   --hold: #cf3f38;
+  --hold-2: #b5322c;
   --hold-tint: #fbeae8;
 
-  --sl-font: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --sl-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-}
-
-/* ── Global accent (both themes read the signal blue) ───────────────────── */
-:root {
-  --sl-color-accent-low: #1b2560;
-  --sl-color-accent: #4f6cff;
-  --sl-color-accent-high: #cdd6ff;
-  --sl-color-text-accent: #9db0ff;
-}
-
-/* ── Docs LIGHT theme = the warm engineering surface ────────────────────── */
-:root[data-theme='light'] {
-  --sl-color-accent-low: var(--signal-tint);
-  --sl-color-accent: var(--signal);
-  --sl-color-accent-high: var(--signal-2);
-  --sl-color-text-accent: var(--signal);
   --sl-color-white: var(--ink);
   --sl-color-gray-1: #26262c;
   --sl-color-gray-2: var(--ink-2);
@@ -53,45 +80,18 @@
   --sl-color-bg: var(--paper);
   --sl-color-bg-nav: color-mix(in srgb, var(--paper) 82%, transparent);
   --sl-color-bg-sidebar: color-mix(in srgb, var(--paper) 60%, #ffffff);
+  --sl-color-accent-low: var(--signal-tint);
+  --sl-color-accent: var(--signal);
+  --sl-color-accent-high: var(--signal-2);
+  --sl-color-text-accent: var(--signal);
   --sl-color-hairline: var(--line);
   --sl-color-hairline-light: var(--line);
   --sl-color-hairline-shade: var(--line);
 }
 
-/* ── Docs DARK theme = refined ink (not the old neon-on-black) ───────────── */
-:root[data-theme='dark'] {
-  --sl-color-bg: #111318;
-  --sl-color-bg-nav: color-mix(in srgb, #111318 78%, transparent);
-  --sl-color-gray-6: #232733;
-  --sl-color-hairline: #232733;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   SPLASH SURFACE — force the light spec-sheet on landing + contact, whichever
-   way the docs theme toggle is set. (Landing components below also use their
-   own --ink/--paper props, so they're theme-proof regardless.)
-   ═══════════════════════════════════════════════════════════════════════════ */
-:root[data-has-hero] {
-  color-scheme: light;
-  --sl-color-accent: var(--signal);
-  --sl-color-accent-high: var(--signal-2);
-  --sl-color-text-accent: var(--signal);
-  --sl-color-white: var(--ink);
-  --sl-color-gray-1: #26262c;
-  --sl-color-gray-2: var(--ink-2);
-  --sl-color-gray-3: var(--ink-3);
-  --sl-color-gray-4: #b7b4aa;
-  --sl-color-gray-5: var(--line-2);
-  --sl-color-gray-6: var(--line);
-  --sl-color-gray-7: #efeee9;
-  --sl-color-black: var(--paper);
-  --sl-color-bg: var(--paper);
-  --sl-color-bg-nav: color-mix(in srgb, var(--paper) 82%, transparent);
-  --sl-color-text: var(--ink-2);
-  --sl-color-hairline: var(--line);
-  --sl-color-hairline-shade: var(--line);
-}
-[data-has-hero] .page { background: var(--paper); }
+/* Splash pages (landing + contact) now consume the SAME theme tokens as
+   everything else — the forced-light override is deleted. That deletion is the
+   cohesion fix: one identity, dark by default, light via the toggle. */
 [data-has-hero] header.header {
   border-bottom: 1px solid var(--line);
   backdrop-filter: saturate(1.1) blur(8px);
@@ -111,12 +111,15 @@ h1, h2, h3, h4,
 [data-has-hero] .sl-markdown-content { max-width: 70rem !important; margin-inline: auto; }
 
 .hero { position: relative; padding-block: clamp(3rem, 7vw, 5.5rem) 1.5rem; }
-.hero::before {   /* blueprint dot-grid, fades out */
+.hero::before {   /* blueprint dot-grid, fades out (faint on dark — no noise) */
   content: ''; position: absolute; inset: -40px 0 auto; height: 460px; z-index: -1;
-  background-image: radial-gradient(circle, color-mix(in srgb, var(--ink) 12%, transparent) 1px, transparent 1px);
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--ink) 6%, transparent) 1px, transparent 1px);
   background-size: 30px 30px;
   -webkit-mask-image: radial-gradient(70% 70% at 50% 30%, black 0%, transparent 72%);
   mask-image: radial-gradient(70% 70% at 50% 30%, black 0%, transparent 72%);
+}
+:root[data-theme='light'] .hero::before {
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--ink) 11%, transparent) 1px, transparent 1px);
 }
 [data-has-hero] .hero .copy { align-items: center !important; text-align: center !important; }
 [data-has-hero] .hero .actions { justify-content: center !important; margin-top: 2rem; }
@@ -157,10 +160,11 @@ h1, h2, h3, h4,
   align-items: stretch; gap: 0; margin: 0 auto; max-width: 62rem;
 }
 .rc-panel {
-  margin: 0; background: var(--panel); border: 1px solid var(--line);
+  margin: 0; background: var(--panel); border: 1px solid var(--line-2);
   border-radius: 14px; overflow: hidden; min-width: 0;
-  box-shadow: 0 1px 0 var(--line), 0 22px 44px -30px rgb(24 24 28 / .28);
 }
+/* elevation only in light; dark stays matte (depth from the surface step) */
+:root[data-theme='light'] .rc-panel { box-shadow: 0 1px 0 var(--line), 0 22px 44px -30px rgb(24 24 28 / .28); }
 .rc-panel figcaption {
   display: flex; align-items: center; gap: .55rem;
   font-family: var(--sl-font-mono); font-size: .82rem; color: var(--ink-2);
@@ -171,9 +175,9 @@ h1, h2, h3, h4,
 .rc-tag {
   font-family: var(--sl-font-mono); font-size: .66rem; font-weight: 600;
   letter-spacing: .08em; padding: .2em .5em; border-radius: 5px;
-  color: #fff; background: var(--ink);
+  color: var(--paper); background: var(--ink);   /* inverted keycap — works both themes */
 }
-.rc-tag.observed { background: var(--signal); }
+.rc-tag.observed { background: var(--signal); color: #fff; }
 
 /* code inside a panel: strip Expressive Code's own frame — the panel is the frame */
 .rc-panel .expressive-code { margin: 0; min-width: 0; }
@@ -192,10 +196,16 @@ h1, h2, h3, h4,
 .rc-status dd { margin: 0; color: var(--ink); }
 .rc-status dd.url { color: var(--signal); word-break: break-all; }
 .rc-status dd .muted { color: var(--ink-3); }
-.rc-status .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: .5em; vertical-align: middle; }
-.rc-status dd.ok .dot { background: var(--signal); box-shadow: 0 0 0 3px var(--signal-tint); }
-.rc-status dd.hold { color: var(--hold); }
-.rc-status dd.hold .dot { background: var(--hold); box-shadow: 0 0 0 3px var(--hold-tint); }
+.rc-status .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: .5em; vertical-align: middle; }
+/* lit LEDs — a 1px ring, not a blur */
+.rc-status dd.ok .dot { background: var(--signal); box-shadow: 0 0 0 1px color-mix(in srgb, var(--signal) 38%, transparent); }
+.rc-status dd.hold { color: var(--hold-2); }
+.rc-status dd.hold .dot { background: var(--hold); box-shadow: 0 0 0 1px color-mix(in srgb, var(--hold) 42%, transparent); }
+/* the held row gets the alarm treatment — tinted, left-bordered (aligned) */
+.rc-status > div:has(dd.hold) {
+  background: var(--hold-tint); border-left: 2px solid var(--hold);
+  border-radius: 0 6px 6px 0; padding-left: calc(.9rem - 2px);
+}
 .rc-foot {
   margin: .2rem 0 0; padding: .9rem 1.1rem 1.1rem; border-top: 1px dashed var(--line-2);
   font-size: .82rem; line-height: 1.5; color: var(--ink-2);
@@ -282,15 +292,9 @@ h1, h2, h3, h4,
 .ladder p { margin: 0; color: var(--ink-2); font-size: .96rem; line-height: 1.6; max-width: 60ch; }
 
 /* ── Capability cards ───────────────────────────────────────────────────── */
-.grid-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 2rem; }
-.grid-cards article {
-  padding: 1.4rem 1.6rem; border: 1px solid var(--line); border-radius: 12px; background: var(--panel);
-  transition: border-color .16s ease, transform .16s ease, box-shadow .16s ease;
-}
-.grid-cards article:hover {
-  border-color: color-mix(in srgb, var(--signal) 45%, var(--line));
-  transform: translateY(-2px); box-shadow: 0 16px 34px -22px rgb(24 24 28 / .3);
-}
+/* Flattened to ruled rows — not raised tiles (avoids the "tray of gray" look). */
+.grid-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 3rem; margin-top: 1.4rem; }
+.grid-cards article { padding: 1.5rem 0; border-top: 1px solid var(--line); background: none; }
 .grid-cards h3 { font-family: var(--display); font-size: 1.06rem; font-weight: 600; margin: 0 0 .45rem; color: var(--ink); }
 .grid-cards p { margin: 0; color: var(--ink-2); font-size: .94rem; line-height: 1.55; }
 .grid-cards code { font-family: var(--sl-font-mono); font-size: .84em; color: var(--signal-2); }

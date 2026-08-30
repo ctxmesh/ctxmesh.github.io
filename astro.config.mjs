@@ -16,12 +16,30 @@ export default defineConfig({
 				'The Kubernetes-native platform for building, governing, and operating AI agents at scale.',
 			logo: { src: './src/assets/logo.svg', replacesTitle: true },
 			customCss: ['./src/styles/custom.css'],
-			// One light code theme site-wide so manifests read as crisp "documents" on
-			// the warm-paper surface — robust regardless of the docs light/dark toggle.
-			expressiveCode: { themes: ['github-light'] },
+			// Low-chroma, warm-leaning code themes (dark default + light toggle) so
+			// syntax whispers and the state colors (blue/red) speak. The key line is
+			// codeBackground: binding it to --panel makes every code block sit IN the
+			// page as an inset instrument card in BOTH themes — the fix for the old
+			// white-card-on-dark bug (a single fixed theme can't track the surface).
+			expressiveCode: {
+				themes: ['vitesse-dark', 'vitesse-light'],
+				styleOverrides: {
+					codeBackground: 'var(--panel)',
+					borderColor: 'var(--line-2)',
+					frames: { editorTabBarBackground: 'var(--paper)' },
+				},
+			},
 			// Default social-share card (link previews on Slack/X/LinkedIn). Starlight
 			// emits og/twitter title+description from frontmatter but no image; supply one.
 			head: [
+				// Dark by default — a control plane's native rendering is a dark console.
+				// Starlight follows the OS otherwise; force dark unless the visitor has
+				// explicitly chosen a theme (the toggle still works and is remembered).
+				{
+					tag: 'script',
+					content:
+						"try{var t=localStorage.getItem('starlight-theme');if(t!=='light'&&t!=='dark'){localStorage.setItem('starlight-theme','dark');document.documentElement.dataset.theme='dark';}}catch(e){}",
+				},
 				{ tag: 'meta', attrs: { property: 'og:image', content: 'https://ctxmesh.github.io/og.png' } },
 				{ tag: 'meta', attrs: { property: 'og:image:width', content: '1200' } },
 				{ tag: 'meta', attrs: { property: 'og:image:height', content: '630' } },
