@@ -32,14 +32,8 @@ export default defineConfig({
 			// Default social-share card (link previews on Slack/X/LinkedIn). Starlight
 			// emits og/twitter title+description from frontmatter but no image; supply one.
 			head: [
-				// Dark by default — a control plane's native rendering is a dark console.
-				// Starlight follows the OS otherwise; force dark unless the visitor has
-				// explicitly chosen a theme (the toggle still works and is remembered).
-				{
-					tag: 'script',
-					content:
-						"try{var t=localStorage.getItem('starlight-theme');if(t!=='light'&&t!=='dark'){localStorage.setItem('starlight-theme','dark');document.documentElement.dataset.theme='dark';}}catch(e){}",
-				},
+				// Theme default is AUTO (Starlight native) — follow the visitor's OS;
+				// both dark and light are first-class, so no forced default.
 				{ tag: 'meta', attrs: { property: 'og:image', content: 'https://ctxmesh.github.io/og.png' } },
 				{ tag: 'meta', attrs: { property: 'og:image:width', content: '1200' } },
 				{ tag: 'meta', attrs: { property: 'og:image:height', content: '630' } },
