@@ -4,9 +4,11 @@ import starlight from '@astrojs/starlight';
 
 // https://astro.build/config
 export default defineConfig({
-	// The canonical site URL. Served at the apex custom domain (see public/CNAME);
-	// the ctxmesh.github.io org repo also serves at root, so no `base` is needed.
-	site: 'https://ctxmesh.ai',
+	// The canonical site URL. The site is served directly by the ctxmesh.github.io
+	// org repo (root, no `base` needed); ctxmesh.ai only *forwards* here (registrar
+	// URL-forwarding) — so github.io is the canonical home for links, sitemap, and
+	// the OG image (which must live on the domain that actually serves it).
+	site: 'https://ctxmesh.github.io',
 	integrations: [
 		starlight({
 			title: 'ctxmesh',
@@ -14,6 +16,16 @@ export default defineConfig({
 				'The Kubernetes-native platform for building, governing, and operating AI agents at scale.',
 			logo: { src: './src/assets/logo.svg', replacesTitle: true },
 			customCss: ['./src/styles/custom.css'],
+			// Default social-share card (link previews on Slack/X/LinkedIn). Starlight
+			// emits og/twitter title+description from frontmatter but no image; supply one.
+			head: [
+				{ tag: 'meta', attrs: { property: 'og:image', content: 'https://ctxmesh.github.io/og.png' } },
+				{ tag: 'meta', attrs: { property: 'og:image:width', content: '1200' } },
+				{ tag: 'meta', attrs: { property: 'og:image:height', content: '630' } },
+				{ tag: 'meta', attrs: { property: 'og:image:alt', content: 'ctxmesh — run AI agents like production software' } },
+				{ tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
+				{ tag: 'meta', attrs: { name: 'twitter:image', content: 'https://ctxmesh.github.io/og.png' } },
+			],
 			social: [
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/ctxmesh' },
 			],
