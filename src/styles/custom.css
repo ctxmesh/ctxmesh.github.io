@@ -107,6 +107,9 @@ h1, h2, h3, h4,
 [data-has-hero] .sl-markdown-content { max-width: 72rem !important; margin-inline: auto; }
 
 .hero { position: relative; padding-block: clamp(2.5rem, 5vw, 4rem) 1rem; }
+/* No hero image — collapse Starlight's 2-column splash grid to one centered
+   column (otherwise the copy sits in the left column and reads as left-shifted). */
+[data-has-hero] .hero { grid-template-columns: minmax(0, 1fr) !important; }
 [data-has-hero] .hero .copy { align-items: center !important; text-align: center !important; }
 [data-has-hero] .hero .actions { justify-content: center !important; margin-top: 1.8rem; }
 .hero h1 {
@@ -124,6 +127,7 @@ h1, h2, h3, h4,
 .hero .actions a[class~='primary']:hover { background: var(--signal-2); }
 .hero .actions a[class~='minimal'] {
   color: var(--ink); border: 1px solid var(--line-2); background: var(--panel);
+  padding-inline: 1.3rem;   /* Starlight's minimal action has 0 side padding */
 }
 .hero .actions a[class~='minimal']:hover { border-color: var(--signal); color: var(--signal-2); }
 
