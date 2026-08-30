@@ -23,6 +23,8 @@ export default defineConfig({
 				{ label: 'Concepts', items: [{ autogenerate: { directory: 'concepts' } }] },
 				{ label: 'Guides', items: [{ autogenerate: { directory: 'guides' } }] },
 				{ label: 'Reference', items: [{ autogenerate: { directory: 'reference' } }] },
+				{ label: 'SDKs', items: [{ autogenerate: { directory: 'sdk' } }] },
+				{ label: 'Operations', items: [{ autogenerate: { directory: 'operations' } }] },
 				{ label: 'Contact', link: '/contact/' },
 			],
 			// A "last updated" stamp from git history on each doc — useful as docs evolve

@@ -1,6 +1,6 @@
 ---
 title: Installation
-description: Install the ctxmesh platform on a Kubernetes cluster.
+description: "Install the ctxmesh platform on a Kubernetes cluster."
 sidebar:
   order: 2
 ---

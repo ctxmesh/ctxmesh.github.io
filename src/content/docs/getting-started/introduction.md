@@ -1,6 +1,6 @@
 ---
 title: Introduction
-description: What ctxmesh is, who it's for, and the problem it solves.
+description: "What ctxmesh is, who it's for, and the problem it solves."
 sidebar:
   order: 1
 ---

@@ -1,6 +1,6 @@
 ---
 title: Reference
-description: API and CLI reference for ctxmesh.
+description: "API and CLI reference for ctxmesh."
 sidebar:
   order: 1
 ---

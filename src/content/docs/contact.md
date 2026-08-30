@@ -1,6 +1,6 @@
 ---
 title: Contact
-description: Get in touch with the ctxmesh team.
+description: "Get in touch with the ctxmesh team."
 template: splash
 hero:
   tagline: Questions, a design partnership, or early access — we'd love to hear from you.

@@ -1,58 +1,79 @@
 ---
 title: Quickstart
-description: Deploy your first agent and talk to it.
+description: "Deploy your first agent, give it a model, and talk to it — end to end."
 sidebar:
   order: 3
 ---
 
+This is the happy path, start to finish. You'll give an agent a model, deploy it, and see its trace.
+
 :::note[Docs in progress]
-The exact resource fields below track the product as it ships; treat this as the shape of the
-workflow, not a version-pinned contract, until the first public release.
+Field names track the shipped product; exact commands and chart coordinates are finalized toward
+general availability.
 :::
 
-Deploying an agent is a single declarative resource. You describe **what** the agent is; the
-platform reconciles it into a running, autoscaled service.
+## 1. Give agents a model
 
-## 1. Describe the agent
+Agents call the gateway with a model **alias**; a `ModelRoute` (whose name is the alias) resolves it.
+For a zero-key first run, use the built-in mock provider:
 
 ```yaml
-apiVersion: agents.ctxmesh.ai/v1alpha1
-kind: AgentDeployment
+apiVersion: agents.ctxmesh.ai/v1beta1
+kind: ModelRoute
 metadata:
-  name: support-agent
+  name: default-model
   namespace: my-team
 spec:
-  image: ghcr.io/my-org/support-agent:1.0.0
-  modelRouteRef: default-chat        # which model + provider to use
-  # Optional governance — see the guides:
-  # guardrailPolicyRef: default-guardrails
-  # approvalPolicyRef: sensitive-tools
-  # evalSuiteRef: support-quality
+  providers:
+    - provider: mock            # deterministic mock — no API key needed
+      model: mock-default
+      priority: 1
 ```
-
-Apply it:
 
 ```bash
-kubectl apply -f support-agent.yaml
+kubectl apply -f modelroute.yaml
 ```
 
-## 2. Watch it come up
+(Swap in a real provider + a `SecretBinding` later — see [Connect a model provider](/guides/connect-a-model-provider/).)
+
+## 2. Deploy the agent
+
+```yaml
+apiVersion: agents.ctxmesh.ai/v1beta1
+kind: AgentDeployment
+metadata:
+  name: hello-agent
+  namespace: my-team
+spec:
+  image: ghcr.io/ctxmesh/example-agent:latest
+  executionModel: serving
+```
 
 ```bash
-kubectl get agentdeployment support-agent -n my-team -w
+kubectl apply -f hello-agent.yaml
+kubectl get agentdeployment hello-agent -n my-team -w
+# wait for Ready=True
 ```
-
-The controller reconciles the spec into a serving revision, wires model routing and tracing, and
-reports readiness on the resource status.
 
 ## 3. Talk to it
 
-Reach the agent through its endpoint (or the console Playground). Every turn is traced — the
-step → tool → model tree, cost, and any guardrail decisions show up in the console under the
-agent's runs.
+Get the serving URL and send a request (the agent calls `model="default-model"` internally):
 
-## Next
+```bash
+URL=$(kubectl get agentdeployment hello-agent -n my-team -o jsonpath='{.status.url}')
+curl -s "$URL" -d '{"input":"hello"}'
+```
 
-- Add **guardrails and approvals** → [Guardrails & approvals](/guides/guardrails-and-approvals/).
-- Gate releases on **evals** and roll out with a **canary** → see the Guides.
-- Understand the moving parts → [Architecture](/concepts/architecture/).
+## 4. See the trace
+
+Open the console → the agent's **runs**. You'll see this invocation as a durable run with its full
+step → tool → model trace and its cost. That's the whole point: nothing is a black box.
+
+## You've done it
+
+You deployed a governed, autoscaled agent and inspected its run. Next, make it real:
+
+- Give it a real model → [Connect a model provider](/guides/connect-a-model-provider/)
+- Add content rules → [Guardrails](/guides/guardrails/)
+- Gate releases on quality → [Evals & the deploy gate](/guides/evals-and-the-deploy-gate/)
+- Understand the moving parts → [Architecture](/concepts/architecture/)
