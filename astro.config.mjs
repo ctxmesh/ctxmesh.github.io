@@ -14,7 +14,14 @@ export default defineConfig({
 			title: 'ctxmesh',
 			description:
 				'The Kubernetes-native platform for building, governing, and operating AI agents at scale.',
-			logo: { src: './src/assets/logo.svg', replacesTitle: true },
+			// Two logos (not currentColor): Starlight renders the logo as an <img>,
+			// so the SVG can't inherit the page text color — hardcode the wordmark per
+			// theme (dark→light text, light→dark text).
+			logo: {
+				light: './src/assets/logo-light.svg',
+				dark: './src/assets/logo-dark.svg',
+				replacesTitle: true,
+			},
 			customCss: ['./src/styles/custom.css'],
 			// Low-chroma, warm-leaning code themes (dark default + light toggle) so
 			// syntax whispers and the state colors (blue/red) speak. The key line is
