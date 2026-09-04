@@ -11,7 +11,7 @@ output, hosted on **GitHub Pages** at [ctxmesh.ai](https://ctxmesh.ai).
 - **Public, read-only for everyone else.** Anyone may read, fork, and open a pull request; only
   repository owners can push or create branches (`main` is protected). This is the one
   outward-facing repo — keep it clean.
-- Not for code or internal planning — those live in the private `agentry` (code) and
+- Not for code or internal planning — those live in the private `ctxmesh` (code) and
   `agent-brain` (planning/specs) repos. This repo is the **public** face only.
 
 ## Develop locally

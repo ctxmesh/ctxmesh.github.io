@@ -12,7 +12,7 @@ in-cluster state-layer persistence).
 ## The upgrade path
 
 ```bash
-helm upgrade ctxmesh ./deploy/helm/agentry \
+helm upgrade ctxmesh ./deploy/helm/ctxmesh \
   -f your-values.yaml
 ```
 

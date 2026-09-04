@@ -27,7 +27,7 @@ gateway, and a console/BFF), delivered as a Helm chart:
 ```bash
 # Illustrative — real coordinates published at release.
 helm repo add ctxmesh https://charts.ctxmesh.ai
-helm install ctxmesh ctxmesh/agentry --namespace ctxmesh-system --create-namespace
+helm install ctxmesh ctxmesh/ctxmesh --namespace ctxmesh --create-namespace
 ```
 
 The install brings up:

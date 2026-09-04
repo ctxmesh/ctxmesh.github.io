@@ -35,7 +35,7 @@ pg_dump "$CONTROLPLANE_DSN" > controlplane-$(date +%F).sql
 **The KEK (LocalSealer) — the one people forget:**
 
 ```bash
-kubectl get secret cred-kek -n agentry -o yaml > cred-kek-$(date +%F).yaml
+kubectl get secret cred-kek -n ctxmesh -o yaml > cred-kek-$(date +%F).yaml
 ```
 
 Store the KEK backup **separately** from the Postgres backup and with tighter access — together they are

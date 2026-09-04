@@ -1,16 +1,15 @@
 ---
 title: CLI
-description: "The agentry CLI: expand, dev [--ui|--replay], eval, download-fixture, replay-serve — flags, exit codes, and env."
+description: "The ctxmesh CLI: expand, dev [--ui|--replay], eval, download-fixture, replay-serve — flags, exit codes, and env."
 ---
 
-The command-line tool is a single binary (`agentry`) with a handful of subcommands for authoring,
+The command-line tool is a single binary (`ctxmesh`) with a handful of subcommands for authoring,
 local iteration, the CI/CD eval gate, and record/replay. Everything the CLI does is also reachable from
 the console — the CLI is the scriptable, CI-friendly path.
 
 :::note
-The binary is named `agentry` (the engine's build name); the product is **ctxmesh**. Exact
-distribution coordinates finalize toward GA. Flags and exit codes below are confirmed against the
-shipped commands.
+Exact distribution coordinates finalize toward GA. Flags and exit codes below are confirmed against
+the shipped commands.
 :::
 
 ## `expand`
@@ -19,7 +18,7 @@ Expand the simplified `agent.yaml` authoring format into a full `AgentDeployment
 stdout.
 
 ```
-agentry expand <file>
+ctxmesh expand <file>
 ```
 
 - Reads the simplified format (`name`, `image`, `executionModel`, `resources`, `scaling`, `model.route`,
@@ -34,7 +33,7 @@ Run an agent locally — no cluster — against a mock or real model gateway, op
 or a recorded replay.
 
 ```
-agentry dev [flags]
+ctxmesh dev [flags]
 ```
 
 | Flag | Default | Meaning |
@@ -59,7 +58,7 @@ Run the CI/CD eval gate for a candidate `agent.yaml`: apply it to an eval namesp
 preview**, poll the in-cluster eval-gate to a terminal phase, and exit with a structured report.
 
 ```
-agentry eval --candidate agent.yaml --min-score 0.80
+ctxmesh eval --candidate agent.yaml --min-score 0.80
 ```
 
 | Flag | Default | Meaning |
@@ -69,7 +68,6 @@ agentry eval --candidate agent.yaml --min-score 0.80
 | `--dataset` | — | Override the `EvalSuite`'s dataset ref (uses the `agent.yaml` `eval.dataset` when omitted). |
 | `--namespace` | `agent-eval` | Eval namespace to apply the candidate into. |
 | `--output` | `json` | Report format: `json` or `junit`. |
-| `--timeout` | `2m` | Max time to wait for a terminal gate phase. |
 
 **Exit codes:** `0` = pass (score ≥ `--min-score`) · `1` = fail (terminal decision below threshold) ·
 `2` = infra (kubeconfig missing, apply failed, timeout, other infra error). The candidate is held at 0%
@@ -81,7 +79,7 @@ traffic during eval; applied resources are deleted on exit (best-effort). See
 Download and merge a recorded run's replay fixture from the object store into a local file.
 
 ```
-agentry download-fixture <run-id> [-o out.json]
+ctxmesh download-fixture <run-id> [-o out.json]
 ```
 
 - Pulls every partial fixture blob a run recorded — the **model channel** (captured at the launcher
@@ -104,8 +102,8 @@ fixture, or a fetch/merge/write error.
 Typical loop:
 
 ```bash
-agentry download-fixture run-abc123
-agentry dev --replay run-abc123.fixture.json
+ctxmesh download-fixture run-abc123
+ctxmesh dev --replay run-abc123.fixture.json
 ```
 
 See [Record & replay](/guides/record-and-replay/).
@@ -115,7 +113,7 @@ See [Record & replay](/guides/record-and-replay/).
 Serve a recorded fixture as the both-channel replay mock.
 
 ```
-agentry replay-serve <fixture-path> [-p 4000]
+ctxmesh replay-serve <fixture-path> [-p 4000]
 ```
 
 Internal — this is what `dev --replay` uses under the hood; documented for completeness. `-p/--port`

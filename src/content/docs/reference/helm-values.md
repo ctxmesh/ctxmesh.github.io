@@ -11,8 +11,8 @@ page is the values reference.
 The fastest path to a correct production posture is the shipped overlay:
 
 ```bash
-helm install ctxmesh ./deploy/helm/agentry \
-  -f deploy/helm/agentry/values-production.yaml \
+helm install ctxmesh ./deploy/helm/ctxmesh \
+  -f deploy/helm/ctxmesh/values-production.yaml \
   [+ your own overrides]
 ```
 
@@ -28,7 +28,7 @@ endpoints) are install-specific and you supply them. Confirm on your cluster wit
 | `profile` | `""` (dev) | `production` makes the HA invariants **hard** — `helm template` **fails** unless the control plane is actually HA (state-layer proxy, BFF, run-worker all ≥2, dispatch on, no bundled dev data plane). |
 | `security.tenantLabelWebhook.enabled` | `true` | The tenant-label `ValidatingWebhook` (forbids a non-controller principal from changing a namespace's `agents.ctxmesh.ai/tenant` label). Boots its own in-process cert controller (no cert-manager). |
 | `security.tenantLabelEnforcement` | `""` | Opt-out ack. To run production **without** the webhook, set to the exact string `"unenforced-UNSAFE-acknowledged"` so a reduced posture can't ship silently. Ignored when the webhook is enabled or under the dev profile. |
-| `namespace` | `agentry` | Install namespace; must match the base manifests for no-drift. |
+| `namespace` | `ctxmesh` | Install namespace; must match the base manifests for no-drift. |
 
 ## Control plane
 
@@ -70,7 +70,7 @@ endpoints) are install-specific and you supply them. Confirm on your cluster wit
 | `bff.generation.platformModels` | `""` | Comma-separated governed generation models (empty = unpinned caller model). |
 | `bff.mcp.enabled` | `true` | BYO-MCP register/discover. `false` (hardened) → the endpoints 404. |
 | `bff.mcp.requireApproval` | `false` | `true` (hardened) → newly registered MCP tools are pending-approval. |
-| `bff.mcp.credentialNamespace` | `""` | Set (e.g. `agentry-credentials`) to render a locked platform namespace holding MCP grant Secrets so tenants can't read each other's OAuth tokens. **Production should set this.** |
+| `bff.mcp.credentialNamespace` | `""` | Set (e.g. `ctxmesh-credentials`) to render a locked platform namespace holding MCP grant Secrets so tenants can't read each other's OAuth tokens. **Production should set this.** |
 
 ## Console login (OIDC/SSO via bundled Dex)
 

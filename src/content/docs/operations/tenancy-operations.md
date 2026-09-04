@@ -78,7 +78,7 @@ namespace X?". See [HTTP API](/reference/http-api/).
 ## Protected namespaces
 
 A denylist is **always refused** as a tenant member: `kube-system`, `kube-public`, `kube-node-lease`,
-and the platform's own namespaces (`agentry`, `kourier-system`, `knative-serving`,
+and the platform's own namespaces (`ctxmesh`, `kourier-system`, `knative-serving`,
 `langfuse`). Adding one to `spec.namespaces` routes it to `denied` with a `ProtectedNamespaceRefused`
 condition — a Tenant can never fence the cluster's own DNS / control plane / platform behind a
 default-deny policy.

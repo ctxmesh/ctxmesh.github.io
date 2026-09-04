@@ -72,7 +72,7 @@ kubectl annotate agentdeployment support-agent -n my-team \
 Run the same suite in your pipeline before you ever apply the change:
 
 ```bash
-agentry eval --candidate ./agent.yaml --dataset support-cases@3 --min-score 0.8
+ctxmesh eval --candidate ./agent.yaml --dataset support-cases@3 --min-score 0.8
 # exit 0 = pass, 1 = below threshold, 2 = error; emits JUnit for your CI.
 ```
 
