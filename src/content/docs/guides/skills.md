@@ -31,7 +31,7 @@ an agent context.
   third of its steps retrieved is worse than useless.
 
 :::note
-`spec.capabilities` is *also* called a skill in places — it mirrors the A2A Agent Card's skill
+`spec.capabilities` is *also* called a skill in places — it mirrors the AMP Agent Card's skill
 advertisement. That is a **discovery advertisement to other agents**; it does not change what an
 agent can do. This page is about the execution artifact.
 :::

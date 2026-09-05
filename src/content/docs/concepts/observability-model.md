@@ -43,7 +43,7 @@ Three mechanisms combine, none of which requires a line of your code:
    ctxmesh imports.
 3. **W3C trace context propagates across every hop.** The launcher extracts the incoming `traceparent`
    and injects it into the forwarded request, so the agent's internal spans nest under the boundary
-   span — and, across an [A2A](/concepts/multi-agent/) call, a child agent's spans nest under the
+   span — and, across an [AMP](/concepts/multi-agent/) call, a child agent's spans nest under the
    parent's. One trace, many pods.
 
 A **no-framework** agent — a hand-rolled loop, or a language with no auto-instrumentation — gets the

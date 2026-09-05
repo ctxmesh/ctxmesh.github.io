@@ -3,13 +3,23 @@ title: Message envelope
 description: "The agent-to-agent envelope schema (traceId, registryId, depth, path, budgetRemaining) and its delivery contract."
 ---
 
-Every agent-to-agent (A2A) call carries a **platform-owned envelope**, stamped by the caller's launcher.
+:::note[AMP is not Google's A2A]
+**AMP** is ctxmesh's own call surface between agents *the platform already owns*: an agent never
+dials another agent, it asks its own launcher, which stamps identity, enforces registry isolation
+and trips the guards. Google's **Agent2Agent (A2A)** is an *interop* protocol — Agent Cards,
+JSON-RPC, a task lifecycle — for agents run by different parties. Different problems; ctxmesh
+implements none of A2A. The surface was called A2A until [M164](/reference/); the old header
+`X-A2A-Envelope` and path `/a2a/{target}` are still accepted.
+:::
+
+
+Every agent-to-agent (AMP) call carries a **platform-owned envelope**, stamped by the caller's launcher.
 The agent's payload is opaque to the platform; the envelope is the control-plane metadata the launcher
 uses for isolation, access control, conversation guards, and trace continuity. This page is the schema
 and delivery contract.
 
 The agent never constructs or forges the envelope — it POSTs its payload to its own launcher's
-[A2A endpoint](/reference/launcher-endpoints/), and the launcher builds and stamps the envelope. It is
+[AMP endpoint](/reference/launcher-endpoints/), and the launcher builds and stamps the envelope. It is
 immutable downstream **except** `depth` and `path`, which each hop extends.
 
 ## Schema
@@ -45,20 +55,20 @@ immutable downstream **except** `depth` and `path`, which each hop extends.
 
 ## Delivery contract
 
-The launcher sends the envelope with the outbound A2A POST:
+The launcher sends the envelope with the outbound AMP POST:
 
-- **In the body** (with the agent payload nested) **and** as an **`X-A2A-Envelope` header**, so the
+- **In the body** (with the agent payload nested) **and** as an **`X-AMP-Envelope` header**, so the
   callee's launcher can read access-control/role/depth without buffering the body.
 - **`X-Conversation-Id`** on a first-hop request seeds `conversationId`.
 - **W3C `traceparent`** is injected/extracted for trace continuity — the caller's launcher owns the
   launcher↔launcher hop (an `a2a.call` span); the callee's launcher extracts it so its `agent.invoke`
   nests underneath. For a *chained* hop, the user/SDK layer should forward `traceparent` from its
-  inbound `/invoke` into its outbound `/a2a`; even if it doesn't, the envelope's inherited `traceId`
+  inbound `/invoke` into its outbound `/amp`; even if it doesn't, the envelope's inherited `traceId`
   keeps the conversation correlated.
 
 ## Typed failures
 
-Every A2A failure is a typed error mapped to an HTTP status, and best-effort (a failed hop never crashes
+Every AMP failure is a typed error mapped to an HTTP status, and best-effort (a failed hop never crashes
 the caller):
 
 | Signal | Status | Cause |
@@ -74,7 +84,7 @@ the caller):
 
 ## Scope (honest status)
 
-The envelope above is the **synchronous** A2A contract (shipped). Async A2A (eventing, DLQ, idempotent
+The envelope above is the **synchronous** AMP contract (shipped). Async AMP (eventing, DLQ, idempotent
 dedupe via `messageId`, large-payload blob offload) builds on the same envelope. A cross-branch /
 cross-conversation **token + wall-clock** budget (vs. the per-branch hop budget here) unifies under the
 cost-budget layer. Multi-registry membership and capability/semantic discovery are phase-2 (v1 discovery

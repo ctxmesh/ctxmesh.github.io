@@ -3,6 +3,16 @@ title: Multi-agent teams
 description: "AgentTeam: a supervisor that delegates to a governed roster of sub-agents via delegate_to, bounded by a spawn budget."
 ---
 
+:::note[AMP is not Google's A2A]
+**AMP** is ctxmesh's own call surface between agents *the platform already owns*: an agent never
+dials another agent, it asks its own launcher, which stamps identity, enforces registry isolation
+and trips the guards. Google's **Agent2Agent (A2A)** is an *interop* protocol — Agent Cards,
+JSON-RPC, a task lifecycle — for agents run by different parties. Different problems; ctxmesh
+implements none of A2A. The surface was called A2A until [M164](/reference/); the old header
+`X-A2A-Envelope` and path `/a2a/{target}` are still accepted.
+:::
+
+
 **Goal:** stand up a supervisor agent that summons a governed roster of sub-agents on demand — each
 delegation runs as a durable sub-run under the invoking user's identity.
 
@@ -103,7 +113,7 @@ run with its own steps, tools, model calls, and cost. Bounded parallel fan-out r
 - `spawnBudget` defaults to `maxFanOut: 4`, `maxSpawnDepth: 3`, `maxTotalSpawns: 20`. A nil block resolves
   to all three defaults.
 - `maxFanOut` + `maxTotalSpawns` are **aggregate** ceilings enforced fail-closed across the whole spawn
-  tree; `maxSpawnDepth` bounds the tree depth (distinct from A2A hop depth).
+  tree; `maxSpawnDepth` bounds the tree depth (distinct from AMP hop depth).
 - Platform ceilings clamp any client-supplied budget (fan-out 128 / depth 32 / total 1024) so a
   compromised pod can't request an unbounded budget — these kill abuse, not legitimate config.
 - `roster` requires at least one entry (max 64); `name` and `agentRef` are DNS labels (1–63 chars).

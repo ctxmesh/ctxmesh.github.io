@@ -112,7 +112,7 @@ ledger is re-attributed on move.
 
 - **Shipped:** the `Tenant` CRD, compute + spend + RPM + concurrency enforcement, protected-namespace
   refusal, the live-usage read surface, opt-in cross-tenant NetworkPolicy.
-- **Known accepted gaps:** **A2A amplification** (one user request → N downstream LLM calls, all
+- **Known accepted gaps:** **AMP amplification** (one user request → N downstream LLM calls, all
   counting against RPM) is accepted for open-core. The spoofable-namespace-label **admission webhook**
   (so only the controller sets the tenant label) is a hardening item — the tenant-label
   `ValidatingWebhook` is default-on in production (proven no-wedge), with an explicit opt-out

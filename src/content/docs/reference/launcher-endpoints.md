@@ -1,7 +1,17 @@
 ---
 title: Launcher endpoints
-description: "The in-pod localhost plane the launcher provides — reserved ports for memory, gateway/budget, A2A, feedback, discovery, and the OTLP collector."
+description: "The in-pod localhost plane the launcher provides — reserved ports for memory, gateway/budget, AMP, feedback, discovery, and the OTLP collector."
 ---
+
+:::note[AMP is not Google's A2A]
+**AMP** is ctxmesh's own call surface between agents *the platform already owns*: an agent never
+dials another agent, it asks its own launcher, which stamps identity, enforces registry isolation
+and trips the guards. Google's **Agent2Agent (A2A)** is an *interop* protocol — Agent Cards,
+JSON-RPC, a task lifecycle — for agents run by different parties. Different problems; ctxmesh
+implements none of A2A. The surface was called A2A until [M164](/reference/); the old header
+`X-A2A-Envelope` and path `/a2a/{target}` are still accepted.
+:::
+
 
 Every platform capability an agent uses is exposed as a **language-agnostic, launcher-traced localhost
 endpoint** — no SDK required (the SDK is typed sugar over exactly these). Inside an agent pod, all
@@ -13,7 +23,7 @@ span on each op. This page is the reserved-port reference.
 These ports are a **platform-internal contract** between the agent process and its launcher/sidecars —
 not an external API. Each new launcher-local listener must claim a **distinct** port (all can be live in
 one pod). The table below is confirmed against the engine; request/response shapes for the memory and
-A2A surfaces are documented where stable and finalize toward GA.
+AMP surfaces are documented where stable and finalize toward GA.
 :::
 
 ## Reserved localhost ports
@@ -23,7 +33,7 @@ A2A surfaces are documented where stable and finalize toward GA.
 | `:2994` | **delegate listener** | — | later | Launcher-local delegate hop — `POST /delegate` (spawn/handoff path), plus `GET /healthz`. |
 | `:2995` | **feedback ingest hook** | `FEEDBACK_PORT` | M9 | Post-run feedback → trace scores. |
 | `:2996` | **budget / guardrail proxy** | `MODEL_GATEWAY_URL` points here when budgeted | M8 | The model-call hop: budget check (fail-closed), guardrails, tenant quota, before forwarding to the gateway. |
-| `:2997` | **A2A listener** | `A2A_PORT` | M6 | Agent-to-agent calls (`/a2a/{target}`) — envelope, access control, guards, tracing. |
+| `:2997` | **AMP listener** | `A2A_PORT` | M6 | Agent-to-agent calls (`/a2a/{target}`) — envelope, access control, guards, tracing. |
 | `:2998` | **memory / knowledge endpoint** | `MEMORY_PORT` | M5 | Session memory, long-term memory, and knowledge (RAG) proxies. |
 | `:2999` | **MCP discovery sidecar** | `DISCOVERY_PORT` | M4 | Tool control/manifest (the discovery sidecar). |
 | `:4317` / `:4318` | **OTLP collector sidecar** | (`localhost` OTLP) | M3 | Trace export — OTLP gRPC (`4317`) / HTTP (`4318`). |
@@ -57,18 +67,18 @@ The language-agnostic session-memory contract (also serving long-term memory and
 
 See [Memory & state](/concepts/memory-and-state/).
 
-## The `:2997` A2A listener
+## The `:2997` AMP listener
 
 An agent calls a peer by POSTing to its **own** launcher — never directly to the peer:
 
-- `POST /a2a/{targetAgent}` — the launcher wraps the caller's JSON payload in the platform
+- `POST /amp/{targetAgent}` — also served as `/a2a/{targetAgent}` for SDKs predating the rename — the launcher wraps the caller's JSON payload in the platform
   [message envelope](/reference/message-envelope/), resolves the target by DNS, forwards, and returns
   the peer's response.
-- The envelope travels both in the body and as an `X-A2A-Envelope` header (so the callee's launcher
+- The envelope travels both in the body and as an `X-AMP-Envelope` header — `X-A2A-Envelope` is still sent and accepted alongside it (so the callee's launcher
   reads access-control/role/depth without buffering the body); `X-Conversation-Id` seeds a
   conversation; W3C `traceparent` carries the trace.
 - **Typed failures → HTTP status:** `unknown_target` → 404, `blocked` → 502, `upstream_failure` → 502,
-  `caller_not_allowed` → 403, malformed → 400, oversize → 413. All best-effort — a failed A2A never
+  `caller_not_allowed` → 403, malformed → 400, oversize → 413. All best-effort — a failed AMP never
   crashes the caller. Guards (`depth_exceeded`, `cycle_detected`, `budget_exceeded`) are enforced by the
   caller's launcher before forwarding.
 - Env: `A2A_PORT` (default `2997`), enabled only when the agent is a registry member

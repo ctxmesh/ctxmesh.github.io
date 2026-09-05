@@ -14,7 +14,7 @@ registry-scoped); your agent packaged on a supported base image.
 
 Set `spec.executionModel: eventing` on an [`AgentDeployment`](/reference/crd/agentdeployment/). Each
 `AgentRegistry` owns a **Broker** named `<registryName>-broker`; the controller subscribes an eventing
-agent to it via a **Trigger** whose filter matches the CloudEvent `type` to the agent's name. An async A2A
+agent to it via a **Trigger** whose filter matches the CloudEvent `type` to the agent's name. An async AMP
 message is the same platform message envelope carried as a **CloudEvent** — the launcher publishes to and
 consumes from the broker, so your agent code never sees the transport.
 
@@ -68,8 +68,8 @@ CloudEvent `type` names this agent. A **non-member** eventing agent goes `Ready=
 
 ## 3. Send it an event
 
-Publish an async A2A message to the registry broker — the CloudEvent `type` names the target agent and the
-envelope becomes the CloudEvent `data`. From another agent this is a normal async A2A send through the
+Publish an async AMP message to the registry broker — the CloudEvent `type` names the target agent and the
+envelope becomes the CloudEvent `data`. From another agent this is a normal async AMP send through the
 launcher; the launcher stamps the `messageId` (the idempotency key) and routes it to the broker. The
 subscribed agent is invoked once per unique `messageId`.
 

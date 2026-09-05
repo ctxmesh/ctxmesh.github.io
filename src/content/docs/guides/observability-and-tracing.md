@@ -18,7 +18,7 @@ Every `/invoke` is traced with **zero SDK**. The launcher emits a boundary span 
 so base-image instrumentation nests beneath it, producing one trace per run:
 
 ```
-agent.invoke                       (launcher boundary span — the run root, or an A2A child)
+agent.invoke                       (launcher boundary span — the run root, or an AMP child)
 └─ <framework chain span>
    ├─ <reasoning step spans>
    ├─ tool.call <name>             (tool name, args, result)
@@ -91,7 +91,7 @@ See the [Security model](/concepts/security-model/).
 - Tracing is on by default for every agent — no SDK, no opt-in.
 - Trace export is **best-effort**: if the collector sidecar or the backend is down, the request still serves
   and spans are dropped, not the run.
-- A run with no incoming `traceparent` starts a **new root trace**; an A2A call continues the caller's trace.
+- A run with no incoming `traceparent` starts a **new root trace**; an AMP call continues the caller's trace.
 - Built-in redaction detectors (email / SSN / key) are always applied.
 
 ## Failure modes

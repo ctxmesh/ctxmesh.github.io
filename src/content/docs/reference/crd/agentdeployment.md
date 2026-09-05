@@ -59,7 +59,7 @@ label cap) minus that 19-character budget leaves 44 characters of name.
 | `spec.knowledgeBases[].namespace` | string | No | agent's namespace | Namespace of the KnowledgeBase. MaxLength 63. |
 | `spec.knowledgeBases[].autoInject` | bool | No | `false` | When true, the SDK auto-injects the most relevant chunks each turn (RAG). When false, the KB is tool-only (`knowledge_search`). |
 | `spec.role` | string | No | — | The agent's role within its [`AgentRegistry`](/reference/crd/agentregistry/) (`orchestrator`/`worker`/`reviewer`, or a custom registry role). Injected as `AGENT_ROLE`. Ignored for non-members. MaxLength 63. |
-| `spec.allowedCallers` | []string | No | — | Per-agent inbound A2A allowlist (peer agent names permitted to call this agent). Empty ⇒ the launcher's default (registry-membership check). Max 64 entries, each 1–63 chars. |
+| `spec.allowedCallers` | []string | No | — | Per-agent inbound AMP allowlist (peer agent names permitted to call this agent). Empty ⇒ the launcher's default (registry-membership check). Max 64 entries, each 1–63 chars. |
 | `spec.budget` | object | No | — | USD cost-governance caps (PRD §14). Enforced by the gateway budget proxy; omitted ⇒ no cost enforcement. |
 | `spec.budget.perConversationUSD` | string | No | — | Hard per-conversation USD cap, exact decimal string e.g. `0.50`. Omit to leave unenforced. Pattern `^[0-9]+(\.[0-9]{1,6})?$`. |
 | `spec.budget.perAgentUSD` | string | No | — | Hard per-agent USD cap across all conversations, e.g. `10.00`. Pattern `^[0-9]+(\.[0-9]{1,6})?$`. |

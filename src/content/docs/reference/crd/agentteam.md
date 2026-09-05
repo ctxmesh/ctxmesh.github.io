@@ -33,7 +33,7 @@ member (supervisor + roster) must be a member of `registryRef`.
 | `spec.roster[].description` | string | No | — | Short natural-language summary surfaced to the supervisor's model at summon time. Max 512 chars. |
 | `spec.spawnBudget` | object | No | maxFanOut=4, maxSpawnDepth=3, maxTotalSpawns=20 | Bounds on-demand delegation (aggregate ceilings, fail-closed). A nil block resolves to all defaults. |
 | `spec.spawnBudget.maxFanOut` | int32 | No | `4` | Max sub-runs a single supervisor step may start. Minimum 1. |
-| `spec.spawnBudget.maxSpawnDepth` | int32 | No | `3` | Max depth of the spawn tree (distinct from A2A hop depth). Minimum 1. |
+| `spec.spawnBudget.maxSpawnDepth` | int32 | No | `3` | Max depth of the spawn tree (distinct from AMP hop depth). Minimum 1. |
 | `spec.spawnBudget.maxTotalSpawns` | int32 | No | `20` | Max sub-runs across the whole spawn tree of one root run. Minimum 1. |
 
 > Platform ceilings clamp any client-supplied budget: fan-out 128, spawn depth 32, total spawns 1024.

@@ -46,7 +46,7 @@ managed **Postgres**, **Redis/Valkey**, and an **S3-compatible** object store. `
 
 ### Do agents need an SDK?
 
-**No.** Every platform capability (memory, tools, feedback, telemetry, A2A) is a **language-agnostic,
+**No.** Every platform capability (memory, tools, feedback, telemetry, AMP) is a **language-agnostic,
 launcher-traced localhost endpoint** — the optional Python/TypeScript SDK is just typed sugar over it.
 Deep traces come from base-image auto-instrumentation, not an SDK. See
 [Launcher endpoints](/reference/launcher-endpoints/).

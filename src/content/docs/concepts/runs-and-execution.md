@@ -43,7 +43,7 @@ idempotent; the platform gives you the key to make that so, and is honest that i
   machine rejects any illegal transition, so a run can never skip execution or mutate a terminal
   state.
 - An agent failure becomes an **honest `failed`**, never a swallowed success.
-- The states are aligned with A2A task states and OpenAI Assistants run statuses, so the mesh and
+- The states are aligned with AMP task states and OpenAI Assistants run statuses, so the mesh and
   external clients interoperate.
 
 There is a second, distinct pause: [workflows](/concepts/multi-agent/) introduce a **`waiting`**

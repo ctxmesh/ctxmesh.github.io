@@ -51,9 +51,9 @@ via `GET /api/tenants/{name}/usage`. See [Tenancy operations](/operations/tenanc
 
 | Limit | Value / behavior |
 |-------|------------------|
-| A2A hop **depth** | Per-registry `maxDepth` (default 8) — a deeper call is rejected `depth_exceeded`. |
-| A2A **hop budget** | Per-registry `hopBudget` (default 32) — decremented per hop; `hopBudget=N` permits exactly N hops. |
-| A2A **cycles / self-calls** | Rejected `cycle_detected` (a self-call is the degenerate 1-cycle). |
+| AMP hop **depth** | Per-registry `maxDepth` (default 8) — a deeper call is rejected `depth_exceeded`. |
+| AMP **hop budget** | Per-registry `hopBudget` (default 32) — decremented per hop; `hopBudget=N` permits exactly N hops. |
+| AMP **cycles / self-calls** | Rejected `cycle_detected` (a self-call is the degenerate 1-cycle). |
 | Registry membership | An agent is in **at most one** registry (v1). |
 | Memory entry / body size | Oversize append → **413** (bounded body). |
 | Session memory TTL | 24h, refreshed on every write. |
