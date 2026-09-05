@@ -117,7 +117,7 @@ MCP register/catalog is gated by `bff.mcp.enabled`; hardened installs can requir
 | `GET /api/approvals` · `GET /api/alerts` | Approval queue · alert feed. |
 | `GET /api/workflows` · `POST /api/workflows/{name}/runs` · `POST /api/workflows/runs` · `GET /api/workflows/spec-schema` | Workflows + run creation. |
 | `GET/POST /api/teams` · `POST /api/teams/generate` | Agent teams. |
-| `GET/POST /api/knowledgebases` · `GET /api/knowledgebases/{name}` · `POST .../search` · `POST .../documents` · `POST .../ingest` | Knowledge bases (RAG). |
+| `GET /api/knowledgebases` · `GET /api/knowledgebases/{name}` · `POST .../search` · `POST .../documents` · `POST .../ingest` | Knowledge bases (RAG). A KnowledgeBase is CREATED as a CRD (`kubectl apply`), not through this API — there is no `POST /api/knowledgebases`. |
 
 ## Datasets (the improvement loop)
 
@@ -137,7 +137,7 @@ MCP register/catalog is gated by `bff.mcp.enabled`; hardened installs can requir
 | `GET /api/traces/{id}/detail` | Trace tree detail. |
 | `GET /api/cost` · `GET /api/cost/breakdown` · `GET /api/cost/forecast` · `GET /api/cost/chargeback` | Cost views. |
 | `GET /api/feedback` · `POST /api/feedback` | Read / submit feedback. |
-| `GET /api/metrics/cost` · `GET /api/metrics/eval-gated` | The cost metric · the "% deploys gated by an EvalSuite" counter. |
+| `GET /api/metrics/eval-gated` | The "% deploys gated by an EvalSuite" counter. Cost lives under `GET /api/cost` (above), not under `/api/metrics`. |
 
 Trace/cost/feedback routes are backed by the trace/cost adapter; unconfigured → `501`.
 

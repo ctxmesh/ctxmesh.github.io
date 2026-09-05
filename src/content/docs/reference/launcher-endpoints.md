@@ -20,7 +20,7 @@ A2A surfaces are documented where stable and finalize toward GA.
 
 | Port | Owner | Injected env | Since | Purpose |
 |------|-------|--------------|-------|---------|
-| `:2994` | **delegate listener** | — | later | Launcher-local delegate hop (spawn/handoff path). |
+| `:2994` | **delegate listener** | — | later | Launcher-local delegate hop — `POST /delegate` (spawn/handoff path), plus `GET /healthz`. |
 | `:2995` | **feedback ingest hook** | `FEEDBACK_PORT` | M9 | Post-run feedback → trace scores. |
 | `:2996` | **budget / guardrail proxy** | `MODEL_GATEWAY_URL` points here when budgeted | M8 | The model-call hop: budget check (fail-closed), guardrails, tenant quota, before forwarding to the gateway. |
 | `:2997` | **A2A listener** | `A2A_PORT` | M6 | Agent-to-agent calls (`/a2a/{target}`) — envelope, access control, guards, tracing. |
@@ -42,6 +42,9 @@ The language-agnostic session-memory contract (also serving long-term memory and
 | `/memory/{conversationId}/append` | POST | Append one JSON entry. |
 | `/memory/{conversationId}/search?q=` | GET | v1 = naive substring match over serialized entries (documented dev-grade; semantic search is phase-2). |
 | `/healthz` | GET | `200` when the listener is up (the backend is not probed here). |
+| `/memory/agent/remember` | POST | Long-term memory write — durable across conversations, unlike `/memory/{conversationId}`. |
+| `/memory/agent/search` | POST | Long-term memory retrieval. |
+| `/knowledge/search` | POST | KnowledgeBase retrieval (RAG). Served on the same `:2998` mux as the memory routes. |
 
 - Entries are stored compacted (canonical JSON); a GET assembles them into an array and never sees
   half-built state. Session TTL is 24h, refreshed on every write.
