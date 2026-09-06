@@ -9,9 +9,13 @@ description: "Which SDK works with which ctxmesh, what the version number does a
 SDKs published alongside it carry the same version string, minted from the same git tag. If
 you are running ctxmesh `0.1.0-beta.1`, use the SDK `0.1.0-beta.1`.
 
-| SDK (`ctxmesh` on PyPI / npm) | ctxmesh | Status |
-| --- | --- | --- |
-| `0.1.0-beta.1` | `0.1.0-beta.1` | current |
+| SDK | Registry | ctxmesh | Status |
+| --- | --- | --- | --- |
+| `ctxmesh` (Python) | [PyPI](https://pypi.org/project/ctxmesh/) | `0.1.0-beta.1` | current |
+| `ctxmesh` (TypeScript) | [npm](https://www.npmjs.com/package/ctxmesh) | `0.1.0-beta.1` | current |
+
+Pre-releases publish under the `beta` dist-tag on npm, so `npm install ctxmesh` resolves to a
+stable release once one exists. Install a beta explicitly: `npm install ctxmesh@beta`.
 
 ## What the version number does *not* tell you
 
