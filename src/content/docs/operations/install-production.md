@@ -26,9 +26,8 @@ The development install bundles Postgres, Redis/Valkey, and an object store for 
 ## Install (overview)
 
 ```bash
-# Illustrative — real coordinates published at release.
-helm repo add ctxmesh https://charts.ctxmesh.ai
-helm install ctxmesh ctxmesh/ctxmesh \
+helm install ctxmesh oci://ghcr.io/ctxmesh/charts/ctxmesh \
+  --version 0.1.0-beta.1 \
   --namespace ctxmesh --create-namespace \
   --set profile=production \
   --set postgres.dsn=... \

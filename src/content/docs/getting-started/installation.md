@@ -25,10 +25,15 @@ ctxmesh installs as a set of custom resource definitions plus a control plane (a
 gateway, and a console/BFF), delivered as a Helm chart:
 
 ```bash
-# Illustrative — real coordinates published at release.
-helm repo add ctxmesh https://charts.ctxmesh.ai
-helm install ctxmesh ctxmesh/ctxmesh --namespace ctxmesh --create-namespace
+helm install ctxmesh oci://ghcr.io/ctxmesh/charts/ctxmesh \
+  --version 0.1.0-beta.1 \
+  --namespace ctxmesh --create-namespace --wait
 ```
+
+The chart is an **OCI artifact on GHCR** — there is no `helm repo add` step, and Helm 3.8+
+pulls `oci://` references natively. `--version` is the chart version; the images it
+references carry the matching `appVersion`, so an install is reproducible from that one
+number. See [compatibility](/reference/compatibility/) for which SDK goes with it.
 
 The install brings up:
 
