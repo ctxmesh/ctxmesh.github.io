@@ -15,6 +15,9 @@ shape; exact commands and chart coordinates land with the first public release.
 
 - A Kubernetes cluster (v1.31+).
 - Knative Serving (for the serving execution model).
+- **Knative Eventing** — required. The controller watches Knative Eventing `Trigger`
+  resources at startup, so on a cluster without it the controller cannot start. It is not
+  optional even if you never use the eventing execution model.
 - An object store and Postgres for control-plane state (bundled options are provided for
   development).
 - Access to at least one model provider, or the bundled mock provider for local development.
