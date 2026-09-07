@@ -30,8 +30,19 @@ gateway, and a console/BFF), delivered as a Helm chart:
 ```bash
 helm install ctxmesh oci://ghcr.io/ctxmesh/charts/ctxmesh \
   --version 0.1.0-beta.1 \
-  --namespace ctxmesh --create-namespace --wait
+  --namespace ctxmesh --create-namespace \
+  --wait --timeout 20m
 ```
+
+:::caution[Give the first install a real timeout]
+`--wait` without `--timeout` uses Helm's **5-minute default**, and a first install does not
+meet it: nine images are pulled on a cluster with an empty cache, and the PostgreSQL image
+alone can take longer than five minutes. Without the flag the install is reported as failed
+while it is in fact still pulling.
+
+The timeout is a ceiling, not a wait — a cluster that already has the images finishes in
+well under it.
+:::
 
 The chart is an **OCI artifact on GHCR** — there is no `helm repo add` step, and Helm 3.8+
 pulls `oci://` references natively. `--version` is the chart version; the images it
