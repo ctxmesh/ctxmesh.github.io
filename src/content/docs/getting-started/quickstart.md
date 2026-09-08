@@ -45,7 +45,7 @@ metadata:
   name: hello-agent
   namespace: my-team
 spec:
-  image: ghcr.io/ctxmesh/example-agent:latest
+  image: ghcr.io/ctxmesh/echo-agent:latest
   executionModel: serving
 ```
 
