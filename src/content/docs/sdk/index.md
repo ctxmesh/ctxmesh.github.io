@@ -1,6 +1,6 @@
 ---
 title: SDKs
-description: "The optional SDKs: typed sugar over the launcher plane. When you need one vs. SDK-free auto-instrumentation."
+description: "Optional typed clients for memory, tools, knowledge, model calls and feedback. When you need one vs. SDK-free auto-instrumentation."
 ---
 
 The ctxmesh SDKs are **optional**. Everything the platform offers an agent — memory, tools, the model
@@ -45,7 +45,7 @@ env/port contract, and byte-for-byte identical trace trees.
 
 :::note
 Both SDKs are vendored into their base images (so an agent built on `base-python` / `base-node` can
-`import ctxmesh` with zero setup). Standalone package publishing finalizes toward GA. The streaming
+`import ctxmesh` with zero setup). Published on PyPI and npm; see Compatibility for versions. The streaming
 model API (`.stream`) is present in Python; the TypeScript streaming methods land as part of the parity
 work. Signatures on the per-language pages reflect what ships today.
 :::

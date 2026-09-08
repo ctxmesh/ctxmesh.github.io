@@ -29,11 +29,16 @@ pip install ./ctxmesh/sdk/python
 cd ctxmesh/sdk/typescript && pnpm install && pnpm build
 ```
 
-:::note[Not on PyPI or npm yet]
-`pip install ctxmesh` and `npm install ctxmesh` do **not** work today — neither package is
-published. Publishing needs a reserved project name and Trusted Publishing credentials,
-which is why the source install above is the real path for now. Until it lands, pin the
-SDK by cloning at a tag rather than tracking `main`.
+:::tip[Installing from a registry]
+Both SDKs are published, and a registry install is the normal path:
+
+```sh
+pip install ctxmesh
+npm install ctxmesh@beta
+```
+
+Build from source only when you are changing the SDK itself. On npm, use the `beta` tag —
+plain `npm install ctxmesh` currently resolves to an older `0.1.0-beta.1`.
 :::
 
 ## Test with no cluster
