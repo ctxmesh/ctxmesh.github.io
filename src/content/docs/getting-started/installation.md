@@ -29,7 +29,7 @@ gateway, and a console/BFF), delivered as a Helm chart:
 
 ```bash
 helm install ctxmesh oci://ghcr.io/ctxmesh/charts/ctxmesh \
-  --version 0.1.0-beta.3 \
+  --version 0.1.0-beta.4 \
   --namespace ctxmesh --create-namespace \
   --wait --timeout 20m
 ```

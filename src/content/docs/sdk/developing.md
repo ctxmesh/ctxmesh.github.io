@@ -43,9 +43,9 @@ gem install ctxmesh --pre           # Ruby — gem install needs --pre while in 
 Java takes the coordinates `ai.ctxmesh:ctxmesh` from
 [Maven Central](https://central.sonatype.com/artifact/ai.ctxmesh/ctxmesh).
 
-Build from source only when you are changing the SDK itself. On npm both the `latest` and `beta`
-dist-tags currently point at the same pre-release, so either resolves — `@beta` stays correct once
-a stable release exists.
+Build from source only when you are changing the SDK itself. **On npm, always use `@beta`.** No
+stable release exists yet, so `latest` is pinned to an older pre-release and a bare
+`npm install ctxmesh` will hand you a version behind the others.
 :::
 
 ## Test with no cluster
