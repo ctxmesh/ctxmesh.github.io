@@ -32,20 +32,40 @@ So the real question is: when do you want the SDK?
   governed by the launcher. Import the SDK only if you additionally want its typed clients or the
   managed loop.
 - Any language with no ctxmesh SDK still gets the full contract — the plane is plain HTTP. You lose the
-  typed clients and the step-tracing helpers, nothing else.
+  typed clients and the step-tracing helpers, nothing else. Six languages now have one; the rest lose
+  only the sugar.
 
-## The two packages
+## The six packages
 
-Both packages are named **`ctxmesh`** and are at **parity** — the same public surface, the same
-env/port contract, and byte-for-byte identical trace trees.
+Every package is named **`ctxmesh`**, and they come at **two tiers**. The tier tells you what you get:
+
+| Language | Install from | Tier |
+| --- | --- | --- |
+| Python | [PyPI](https://pypi.org/project/ctxmesh/) | **authoring** |
+| TypeScript | [npm](https://www.npmjs.com/package/ctxmesh) | **authoring** |
+| Go | [pkg.go.dev](https://pkg.go.dev/github.com/ctxmesh/ctxmesh/sdk/go) | plane client |
+| Rust | [crates.io](https://crates.io/crates/ctxmesh) | plane client |
+| Ruby | [RubyGems](https://rubygems.org/gems/ctxmesh) | plane client |
+| Java | [Maven Central](https://central.sonatype.com/artifact/ai.ctxmesh/ctxmesh) | plane client |
+
+**Plane client** — every launcher route reachable with typed clients, typed errors, config read from
+the injected environment, and offline testing stubs. This is the floor every SDK meets.
+
+**Authoring** — the plane client *plus* the managed agent loop, tool dispatch, the model client,
+`serve`, step tracing and record/replay. Python and TypeScript only; adding a language here is a
+separate decision per language.
+
+So a Rust or Java agent reaches memory, knowledge, skills, feedback, delegation and handoff through
+typed calls, and writes its own loop. A Python or TypeScript agent can hand the loop to the SDK.
 
 - **Python** — bundled in the `base-python` agent image. See [Python SDK](/sdk/python/).
 - **TypeScript** — bundled in the `base-node` agent image, with `async` parity across the surface. See
   [TypeScript SDK](/sdk/typescript/).
+- **Go, Rust, Ruby, Java** — each SDK's README carries its install snippet and full surface.
 
 :::note
 Both SDKs are vendored into their base images (so an agent built on `base-python` / `base-node` can
-`import ctxmesh` with zero setup). Published on PyPI and npm; see Compatibility for versions. The streaming
+`import ctxmesh` with zero setup). Python and TypeScript are published on PyPI and npm; the other four ship on their own registries (table above). See Compatibility for versions. The streaming
 model API (`.stream`) is present in Python; the TypeScript streaming methods land as part of the parity
 work. Signatures on the per-language pages reflect what ships today.
 :::

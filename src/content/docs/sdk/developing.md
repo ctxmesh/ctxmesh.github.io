@@ -30,15 +30,22 @@ cd ctxmesh/sdk/typescript && pnpm install && pnpm build
 ```
 
 :::tip[Installing from a registry]
-Both SDKs are published, and a registry install is the normal path:
+All six SDKs are published, and a registry install is the normal path:
 
 ```sh
-pip install ctxmesh
-npm install ctxmesh@beta
+pip install ctxmesh                 # Python
+npm install ctxmesh@beta            # TypeScript
+go get github.com/ctxmesh/ctxmesh/sdk/go
+cargo add ctxmesh                   # Rust
+gem install ctxmesh --pre           # Ruby — gem install needs --pre while in beta
 ```
 
-Build from source only when you are changing the SDK itself. On npm, use the `beta` tag —
-plain `npm install ctxmesh` currently resolves to an older `0.1.0-beta.1`.
+Java takes the coordinates `ai.ctxmesh:ctxmesh` from
+[Maven Central](https://central.sonatype.com/artifact/ai.ctxmesh/ctxmesh).
+
+Build from source only when you are changing the SDK itself. On npm both the `latest` and `beta`
+dist-tags currently point at the same pre-release, so either resolves — `@beta` stays correct once
+a stable release exists.
 :::
 
 ## Test with no cluster
