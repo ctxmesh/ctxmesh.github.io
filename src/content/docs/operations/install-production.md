@@ -27,7 +27,7 @@ The development install bundles Postgres, Redis/Valkey, and an object store for 
 
 ```bash
 helm install ctxmesh oci://ghcr.io/ctxmesh/charts/ctxmesh \
-  --version 0.1.0-beta.4 \
+  --version 0.1.0-beta.5 \
   --namespace ctxmesh --create-namespace \
   --set profile=production \
   --set postgres.dsn=... \
