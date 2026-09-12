@@ -15,7 +15,7 @@ It holds no credentials. Endpoints and identity arrive in the environment the la
 <dependency>
   <groupId>ai.ctxmesh</groupId>
   <artifactId>ctxmesh</artifactId>
-  <version>0.1.0-beta.5</version>
+  <version>0.1.0-beta.6</version>
 </dependency>
 ```
 

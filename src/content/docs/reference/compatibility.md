@@ -7,16 +7,16 @@ description: "Which SDK works with which ctxmesh, what the version number does a
 
 **The SDKs ship at the product's version.** A ctxmesh release and the six SDKs published
 alongside it carry the same version string, minted from the same git tag. If you are running
-ctxmesh `0.1.0-beta.5`, use the SDK `0.1.0-beta.5`.
+ctxmesh `0.1.0-beta.6`, use the SDK `0.1.0-beta.6`.
 
 | SDK | Registry | ctxmesh | Tier | Status |
 | --- | --- | --- | --- | --- |
-| `ctxmesh` (Python) | [PyPI](https://pypi.org/project/ctxmesh/) | `0.1.0-beta.5` | authoring | current |
-| `ctxmesh` (TypeScript) | [npm](https://www.npmjs.com/package/ctxmesh) | `0.1.0-beta.5` | authoring | current |
-| `ctxmesh` (Go) | [pkg.go.dev](https://pkg.go.dev/github.com/ctxmesh/ctxmesh/sdk/go) | `0.1.0-beta.5` | plane client | current |
-| `ctxmesh` (Rust) | [crates.io](https://crates.io/crates/ctxmesh) | `0.1.0-beta.5` | plane client | current |
-| `ctxmesh` (Ruby) | [RubyGems](https://rubygems.org/gems/ctxmesh) | `0.1.0-beta.5` | plane client | current |
-| `ai.ctxmesh:ctxmesh` (Java) | [Maven Central](https://central.sonatype.com/artifact/ai.ctxmesh/ctxmesh) | `0.1.0-beta.5` | plane client | current |
+| `ctxmesh` (Python) | [PyPI](https://pypi.org/project/ctxmesh/) | `0.1.0-beta.6` | authoring | current |
+| `ctxmesh` (TypeScript) | [npm](https://www.npmjs.com/package/ctxmesh) | `0.1.0-beta.6` | authoring | current |
+| `ctxmesh` (Go) | [pkg.go.dev](https://pkg.go.dev/github.com/ctxmesh/ctxmesh/sdk/go) | `0.1.0-beta.6` | plane client | current |
+| `ctxmesh` (Rust) | [crates.io](https://crates.io/crates/ctxmesh) | `0.1.0-beta.6` | plane client | current |
+| `ctxmesh` (Ruby) | [RubyGems](https://rubygems.org/gems/ctxmesh) | `0.1.0-beta.6` | plane client | current |
+| `ai.ctxmesh:ctxmesh` (Java) | [Maven Central](https://central.sonatype.com/artifact/ai.ctxmesh/ctxmesh) | `0.1.0-beta.6` | plane client | current |
 
 See [SDKs](/sdk/) for what each tier includes.
 
@@ -27,7 +27,7 @@ pre-release on its own while no stable exists. RubyGems does **not**: `gem insta
 until a stable release exists, so use `gem install ctxmesh --pre` (a Gemfile's `gem "ctxmesh"`
 resolves it without help). Maven and Cargo take the exact version from the table above.
 
-RubyGems also normalises the version string: `0.1.0-beta.5` is published as `0.1.0.pre.beta.3`.
+RubyGems also normalises the version string: `0.1.0-beta.6` is published as `0.1.0.pre.beta.3`.
 
 ## What the version number does *not* tell you
 
@@ -49,7 +49,7 @@ matrix; going that direction later is easy, and the reverse is not.
 ## The support window
 
 - An SDK is supported against **the ctxmesh it shipped with**, and forward against **later
-  patches of the same minor** — `0.1.0-beta.5` through `0.1.x`.
+  patches of the same minor** — `0.1.0-beta.6` through `0.1.x`.
 - Older SDKs keep working across a minor by design (see the plane contract below), but only
   the matching pair is *tested* together in CI.
 - Pre-1.0, a minor version may carry breaking changes. They are always in the changelog.
