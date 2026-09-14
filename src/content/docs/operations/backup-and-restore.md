@@ -34,9 +34,20 @@ pg_dump "$CONTROLPLANE_DSN" > controlplane-$(date +%F).sql
 
 **The KEK (LocalSealer) — the one people forget:**
 
+There is no fixed name for this Secret: you chose it when you created the `CredentialStore`, so
+find it rather than guessing. Discover the name, then back it up from the platform credential
+namespace (`ctxmesh` unless you set `bff.mcp.credentialNamespace`):
+
 ```bash
-kubectl get secret cred-kek -n ctxmesh -o yaml > cred-kek-$(date +%F).yaml
+kubectl get clustercredentialstores,credentialstores -A -o jsonpath=\
+'{range .items[*]}{.kind}{"/"}{.metadata.name}{"\t"}{.spec.provider.postgres.encryption.localKEKSecretRef.name}{"\n"}{end}'
+
+KEK=<the name that printed>
+kubectl get secret "$KEK" -n ctxmesh -o yaml > "kek-$KEK-$(date +%F).yaml"
 ```
+
+If that command prints nothing, no `CredentialStore` is configured and credentials are held by the
+built-in Kubernetes backend — there is no KEK to back up, and the Secrets themselves are the data.
 
 Store the KEK backup **separately** from the Postgres backup and with tighter access — together they are
 the credential data in the clear. For an **external** KMS/transit custodian (OpenBao transit, cloud
@@ -60,7 +71,7 @@ volume follow a reschedule (a ReadWriteOnce local volume pins the pod to one nod
 1. **Fresh install** the platform (`helm install`) — control plane rebuilds stateless.
 2. **Restore Postgres** (`psql < dump.sql`) before the control plane needs it, or point
    `CONTROLPLANE_DSN` at the restored instance.
-3. **Restore the KEK Secret** (`kubectl apply -f cred-kek-*.yaml`) — credential ciphertext is
+3. **Restore the KEK Secret** (`kubectl apply -f kek-*.yaml`) — credential ciphertext is
    unreadable until it's back. For an external custodian, ensure the referenced keys still exist.
 4. **Restore the capability keypair** Secret if you're keeping existing OBO grants valid.
 5. **Re-apply your CRDs** (GitOps / `kubectl apply`) — the controller reconstructs agents, routes,
