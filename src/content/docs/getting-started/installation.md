@@ -15,9 +15,13 @@ shape; exact commands and chart coordinates land with the first public release.
 
 - A Kubernetes cluster (v1.31+).
 - Knative Serving (for the serving execution model).
-- **Knative Eventing** — required. The controller watches Knative Eventing `Trigger`
-  resources at startup, so on a cluster without it the controller cannot start. It is not
-  optional even if you never use the eventing execution model.
+- **Knative Eventing** — *only* if you use `executionModel: eventing`. The default
+  (`serving`) and `job` agents need nothing from it, and the control plane starts and runs
+  normally on a cluster without it. Install it when you want event-driven agents, then restart
+  the ctxmesh controller so it picks the capability up; until then an eventing agent fails
+  explicitly and tells you this.
+- **KEDA** — for event- and metric-driven autoscaling (`AgentScalingPolicy`, `ScaledObject`).
+  The chart's own description and post-install notes list it as a prerequisite.
 - An object store and Postgres for control-plane state (bundled options are provided for
   development).
 - Access to at least one model provider, or the bundled mock provider for local development.
