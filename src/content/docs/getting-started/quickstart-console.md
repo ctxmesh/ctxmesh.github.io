@@ -12,6 +12,39 @@ Everything the console does here is [caller-scoped](/concepts/security-model/): 
 Kubernetes identity and RBAC, so you can only create what you're allowed to create. Nothing is
 auto-applied — you review before anything lands.
 
+## 0. Open the console and sign in
+
+Nothing above tells you where the console *is*. It is served by the BFF, which the chart does not
+expose publicly — so for a first look, forward it:
+
+```bash
+kubectl -n ctxmesh port-forward svc/ctxmesh-bff 9090:9090
+```
+
+Then open **http://localhost:9090/**.
+
+**Signing in.** With no SSO configured — the default — the console asks for a Kubernetes bearer
+token, and it acts with *that* identity: everything you can do in the console is exactly what your
+RBAC allows, nothing more. Paste a token for a subject that has one of the shipped personas bound in
+the namespace you want to work in:
+
+```bash
+# Bind yourself (or a ServiceAccount) to a persona in your namespace.
+# ctxmesh-operator can create and run agents; ctxmesh-developer and ctxmesh-viewer are narrower.
+kubectl create rolebinding my-operator \
+  --clusterrole=ctxmesh-operator --user="$(kubectl config view --minify -o jsonpath='{.contexts[0].context.user}')" \
+  -n my-team
+```
+
+A stock install binds **nobody** to a persona, so without this the console signs you in and then
+shows you an empty, read-only view — which looks like a broken install and is not one.
+
+To connect a provider you also need `ctxmesh-credential-admin` in that namespace; it can write a
+credential and deliberately cannot read one back.
+
+For real use, turn on SSO (`auth.oidc.enabled`) and bind the personas to your groups instead of
+handing out tokens — see [Helm values](/reference/helm-values/).
+
 ## 1. Connect a model provider
 
 Agents call the [gateway](/concepts/architecture/) with a `ModelRoute` *name*; connecting a provider is
