@@ -55,7 +55,7 @@ metadata:
 spec:
   deploymentName: echo-agent
   snapshot:
-    image: ghcr.io/ctxmesh/echo-agent:latest
+    image: ghcr.io/ctxmesh/echo-agent:v0.1.0-beta.6
     port: 8080
     executionModel: serving
 ```

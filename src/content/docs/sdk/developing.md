@@ -14,7 +14,7 @@ that plane with fakes and never leave your editor — and the SDK ships those fa
 ## Getting the SDK
 
 **Inside an agent image, it is already there.** `base-python` and `base-node` bundle the
-package, so a `FROM ghcr.io/ctxmesh/base-python` agent can `import ctxmesh` with no install
+package, so a `FROM ghcr.io/ctxmesh/base-python:v0.1.0-beta.6` agent can `import ctxmesh` with no install
 step and no `requirements.txt` entry.
 
 **On your machine, install it from the repository:**

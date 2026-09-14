@@ -12,6 +12,14 @@ Field names track the shipped product; exact commands and chart coordinates are 
 general availability.
 :::
 
+## 0. Make a namespace to work in
+
+Every manifest below lands in `my-team`, and nothing has created it yet:
+
+```bash
+kubectl create namespace my-team
+```
+
 ## 1. Give agents a model
 
 Agents call the gateway with a model **alias**; a `ModelRoute` (whose name is the alias) resolves it.
@@ -45,7 +53,7 @@ metadata:
   name: hello-agent
   namespace: my-team
 spec:
-  image: ghcr.io/ctxmesh/echo-agent:latest
+  image: ghcr.io/ctxmesh/echo-agent:v0.1.0-beta.6
   executionModel: serving
 ```
 

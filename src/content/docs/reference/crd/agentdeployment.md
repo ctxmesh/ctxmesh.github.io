@@ -36,7 +36,7 @@ label cap) minus that 19-character budget leaves 44 characters of name.
 
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
-| `spec.image` | string | **Yes** | — | Fully-qualified agent container image, e.g. `ghcr.io/ctxmesh/echo-agent:latest`. MinLength 1. |
+| `spec.image` | string | **Yes** | — | Fully-qualified agent container image, e.g. `ghcr.io/ctxmesh/echo-agent:v0.1.0-beta.6`. MinLength 1. |
 | `spec.executionModel` | string (enum) | No | `serving` | `serving` (Knative Service, request-driven), `eventing` (serving + a Knative Eventing Trigger on the registry broker), or `job` (one-shot Kubernetes Job, or a CronJob when a `schedule` scaling policy targets it). |
 | `spec.port` | int32 | No | `8080` | TCP port the agent HTTP server listens on (passed as `$AGENT_PORT`). Range 1–65535. |
 | `spec.resources` | object | No | — | CPU/memory requests for the agent container. When omitted, no requests are set (Knative default). |
@@ -152,7 +152,7 @@ metadata:
   name: echo-agent
   namespace: my-team
 spec:
-  image: ghcr.io/ctxmesh/echo-agent:latest
+  image: ghcr.io/ctxmesh/echo-agent:v0.1.0-beta.6
 ```
 
 ### Fuller — governed, gated, with memory and budget
