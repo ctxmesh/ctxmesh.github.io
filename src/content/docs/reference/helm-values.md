@@ -52,15 +52,52 @@ endpoints) are install-specific and you supply them. Confirm on your cluster wit
 | `componentPodDisruptionBudgets.enabled` | `false` | PDBs for bff / gateway / token-service / statelayer-proxy. Enable alongside their `replicas≥2` (each renders only at `≥2`). |
 | `componentPodDisruptionBudgets.minAvailable` | `1` | |
 
+## Sizing (container resources)
+
+Every workload's CPU and memory come from values. The defaults are what the chart has always
+shipped, so `helm upgrade` without setting any of these changes no limit on your cluster.
+
+| Value | Default | Meaning |
+|-------|---------|---------|
+| `bff.resources` | `500m`/`1Gi` limits, `10m`/`192Mi` requests | The console's server-side layer. |
+| `controllerManager.resources` | `500m`/`128Mi`, `10m`/`64Mi` | The operator. |
+| `gateway.resources` | `2`/`1536Mi`, `50m`/`512Mi` | LiteLLM. The largest default in the chart — it holds provider clients and streams. |
+| `tokenService.resources` | `500m`/`128Mi`, `10m`/`64Mi` | Credential plane. |
+| `statelayerProxy.resources` | `500m`/`128Mi`, `10m`/`64Mi` | The memory/quota hop. Size this alongside `statelayerProxy.replicas`. |
+| `preflight.resources`, `capabilityKey.resources`, `tenantCleanup.resources` | `128Mi` limit, `10m`/`64Mi` | Install-time Jobs and hooks. |
+| `bff.runStore.resources` | `1Gi` limit, `50m`/`64Mi` | The durable run worker (only with `bff.runStore.enabled`). |
+| `devDataPlane.postgres.resources` | `2Gi` limit, `100m`/`256Mi` | The bundled **dev/trial** data plane. Production runs its own. |
+| `devDataPlane.statelayer.resources` | `256Mi` limit, `50m`/`128Mi` | |
+| `devDataPlane.objectstore.resources` | `512Mi` limit, `50m`/`128Mi` | |
+| `devDataPlane.nats.resources` | `512Mi` limit, `50m`/`64Mi` | |
+| `statelayer.persistence.resources` | `1`/`256Mi`, `50m`/`128Mi` | The persistent state layer. |
+
+Set a map to `null` to remove the block entirely — what you want when a `LimitRange` in the
+namespace supplies them instead:
+
+```bash
+helm upgrade ctxmesh oci://ghcr.io/ctxmesh/charts/ctxmesh --version 0.1.0-beta.6 \
+  --set bff.resources.limits.memory=2Gi \
+  --set gateway.resources.limits.cpu=4
+```
+
+:::note
+`statelayer.persistence.cpuLimit` was replaced by `statelayer.persistence.resources`. Setting the
+old key now **fails the render** with a message naming the replacement, rather than silently
+ignoring a limit you set on purpose.
+:::
+
 ## BFF / console
 
 | Value | Default | Meaning |
 |-------|---------|---------|
 | `ui.enabled` | `true` | Serve the console SPA + `/api`. `false` = headless control plane. |
-| `bff.replicas` | `1` | **`>1` requires `runStore.enabled`** (dispatch) — else in-process runs split across pods and are lost on a pod loss; the render fails on `>1` without dispatch. |
+| `bff.replicas` | `1` | **`>1` requires `bff.runStore.enabled`** (dispatch) — else in-process runs split across pods and are lost on a pod loss; the render fails on `>1` without dispatch. |
 | `bff.image.repository` / `.tag` | `bff` / `""` | Signed image in production. |
 | `bff.runStore.enabled` | `false` | Durable run store + HA run-worker: the BFF dispatches runs to a separate worker. Requires a Secret (`dsnSecretName`, key `dsn`) with the run-store Postgres DSN. |
 | `bff.runStore.dsnSecretName` | `run-store` | The run-store DSN Secret name (create it with a managed-Postgres DSN). |
+| `bff.runExecTimeout` | `""` (10m) | How long one run advance may take — the agent's whole managed loop for a turn. Raise it for long tool chains; empty uses the compiled default. |
+| `bff.runExecMaxTimeout` | `""` (60m) | The ceiling that kills a wedged run regardless of the above. |
 | `bff.runStore.worker.concurrency` | `4` | Concurrent claim loops per worker pod. |
 | `bff.runStore.worker.minReplicaCount` | `1` | KEDA min **and** the Deployment warm floor. `0` opts into scale-to-zero; production uses `2`. |
 | `bff.runStore.worker.maxReplicaCount` | `10` | KEDA max on queued-run backlog. |
