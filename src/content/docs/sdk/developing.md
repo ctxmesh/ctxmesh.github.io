@@ -17,6 +17,41 @@ that plane with fakes and never leave your editor — and the SDK ships those fa
 package, so a `FROM ghcr.io/ctxmesh/base-python:v0.1.0-beta.6` agent can `import ctxmesh` with no install
 step and no `requirements.txt` entry.
 
+### Your image must run as a non-root user
+
+The controller hardens every agent container with `runAsNonRoot: true`, so an image whose user is
+root never starts — the pod reports:
+
+```
+CreateContainerConfigError: container has runAsNonRoot and image will run as root
+```
+
+**`v0.1.0-beta.6` and earlier base images run as root.** Until the next release, either set
+`spec.unconfined: true` on the AgentDeployment, or add a non-root user to your own image:
+
+```dockerfile
+FROM ghcr.io/ctxmesh/base-python:v0.1.0-beta.6
+USER 65532:65532
+```
+
+From the next release onward `base-python` and `base-node` already end as `65532:65532`, and you
+only need to act if your image writes to a root-owned path at **build** time. Then step up and back
+down — whatever user the image ends on is the user the container runs as:
+
+```dockerfile
+FROM ghcr.io/ctxmesh/base-python:<version>
+WORKDIR /app
+COPY requirements.txt /app/requirements.txt
+USER root
+RUN pip install --no-cache-dir -r /app/requirements.txt
+USER 65532:65532
+COPY agent.py /app/agent.py
+```
+
+Use the **numeric** uid, not a name: the kubelet cannot check a non-numeric image user against
+`runAsNonRoot` and refuses the container for that reason instead. If your agent writes to its
+working directory at runtime, give it ownership — `COPY --chown=65532:65532` — or write to `/tmp`.
+
 **On your machine, install it from the repository:**
 
 ```sh
