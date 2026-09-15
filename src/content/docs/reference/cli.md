@@ -25,7 +25,12 @@ ctxmesh expand <file>
   and the fields added in later milestones) and prints the expanded `AgentDeployment` YAML.
 - An **unknown top-level field** is a hard error naming the field (no silent drops). A field not yet
   supported is rejected with an explicit "not yet supported" message.
-- Round-trips cleanly with `kubectl apply -f -`.
+- Round-trips cleanly with `kubectl apply -f -` — **except when the file has a `prompt:` block.**
+  That block expands to a `PromptVersion` document, and `PromptVersion` is **not a CRD**: it was
+  retired to Postgres and is managed through the control-plane API, so `kubectl apply` rejects it
+  with `no matches for kind "PromptVersion"`. Send that output to the control plane (the console's
+  create-from-file path, or `POST /api/promptversions`) rather than to `kubectl`. Every other
+  expansion applies cleanly.
 
 ## `dev`
 
