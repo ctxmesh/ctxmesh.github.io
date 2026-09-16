@@ -18,6 +18,30 @@ its registry has approved and pinned. The controller renders the tool into the a
 binding change **hot-updates** without a pod restart. To register your **own** server (auth tiers,
 OBO), see [Bring your own MCP](/guides/bring-your-own-mcp/).
 
+## Before you start: two things every tool-having agent needs
+
+**An egress-sidecar image.** Every agent with at least one tool gets an egress sidecar — the
+always-on tool-call chokepoint — and it has no fallback image. On a default chart install this is
+set for you; if your values set `controllerManager.oboEgress.sidecarImage` to `""`, Knative rejects
+the agent's Service with `missing field(s): … containers[N].image`, naming a container index rather
+than the cause.
+
+**A run capability on the call.** The sidecar refuses a tool call that carries none
+(`401 no_capability`), because that token is the only evidence of who is asking — without it any
+unauthenticated caller could spend another user's credential. Two consequences worth knowing before
+you build:
+
+- **Invoke through the control plane**, not by curling the agent URL unauthenticated. An
+  authenticated request through the agent edge gets a capability minted and injected for you.
+- **A hand-rolled agent loop must relay it.** The managed loop does this for you. If you write your
+  own, enter `client.request_scope(headers)` (Python SDK) so every `tools.call` carries the
+  capability; without it the ContextVar is unset and the sidecar sees nothing. An SDK-free agent
+  must forward the `X-Ctxmesh-Run-Capability` header to its MCP client by hand.
+
+Agents running as `job`, `cron` or `eventing` have no invoker and cannot obtain a capability today —
+see [ADR 0143](https://github.com/ctxmesh/ctxmesh) for the open decision. Tools on those execution
+models do not work yet.
+
 ## 1. Bind a tool
 
 The two modes differ only in where the server runs:

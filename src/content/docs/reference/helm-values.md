@@ -152,10 +152,10 @@ Valkey/managed Redis** with real, operator-managed auth.
 
 | Value | Default | Meaning |
 |-------|---------|---------|
-| `controllerManager.injectedImages.collector` | `""` | The OTel collector sidecar image. Empty ⇒ dev.local default (ImagePullBackOff off a real cluster) — **production must set** this, digest-pinned. |
-| `controllerManager.injectedImages.discovery` | `""` | The tool-discovery sidecar image. Same requirement. |
-| `controllerManager.oboEgress.enabled` | `false` | On-behalf-of egress-sidecar injection (per-user tool calls). Set `true` + `sidecarImage` for a working OBO install. |
-| `controllerManager.oboEgress.sidecarImage` | `""` | The egress sidecar image. |
+| `controllerManager.injectedImages.collector` | `ghcr.io/ctxmesh/agent-otel-collector` | The OTel collector sidecar image, injected into **every** agent pod. Tagged with the chart's appVersion unless you pin your own tag or digest. Empty ⇒ the controller's `dev.local` default, which ImagePullBackOffs on a real cluster. |
+| `controllerManager.injectedImages.discovery` | `ghcr.io/ctxmesh/agent-discovery` | The tool-discovery sidecar image, injected into every agent that has a tool binding. Same tagging and same `dev.local` caveat. |
+| `controllerManager.oboEgress.enabled` | `false` | Gates OBO **credential injection** only — per-user tool calls. It does **not** gate sidecar injection and has not since M82: the egress sidecar is injected for every agent with ≥1 tool whatever this says. |
+| `controllerManager.oboEgress.sidecarImage` | `ghcr.io/ctxmesh/egress-sidecar` | The egress sidecar image. **Required by any install that uses tools**, not only OBO ones, because the sidecar is the always-on tool-call chokepoint. Unlike the two above it has **no fallback**: an empty value makes Knative reject the agent's Service with `missing field(s): … containers[N].image`. |
 | `controllerManager.oboEgress.capabilityAudience` / `.tokenServiceURL` | `""` | Audience / token-service URL (the URL is derived by default). The capability public key comes from the `bff-capability` Secret, **not** here. |
 
 ## Install hooks (GA Gate A)
