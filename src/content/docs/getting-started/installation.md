@@ -33,7 +33,7 @@ gateway, and a console/BFF), delivered as a Helm chart:
 
 ```bash
 helm install ctxmesh oci://ghcr.io/ctxmesh/charts/ctxmesh \
-  --version 0.1.0-beta.6 \
+  --version 0.1.0-beta.7 \
   --namespace ctxmesh --create-namespace \
   --wait --timeout 20m
 ```
@@ -46,6 +46,22 @@ while it is in fact still pulling.
 
 The timeout is a ceiling, not a wait — a cluster that already has the images finishes in
 well under it.
+:::
+
+:::note[Hardening the namespace]
+The chart does not create or own the install namespace — `--create-namespace` does, which is what
+keeps `helm uninstall` from ever deleting it (and the platform's PersistentVolumeClaims with it).
+That also means the namespace carries no Pod Security Admission labels. Every control-plane
+workload already sets `runAsNonRoot`, `allowPrivilegeEscalation: false`, dropped capabilities and a
+seccomp profile in its own pod spec, so this is defence in depth rather than the control — but if
+you want the namespace-level guard too:
+
+```bash
+kubectl label namespace ctxmesh   pod-security.kubernetes.io/enforce=baseline   pod-security.kubernetes.io/warn=restricted   pod-security.kubernetes.io/audit=restricted
+```
+
+`baseline` rather than `restricted` because the optional dev data plane (the bundled PostgreSQL and
+object store, off by default in production installs) is not yet restricted-clean.
 :::
 
 The chart is an **OCI artifact on GHCR** — there is no `helm repo add` step, and Helm 3.8+

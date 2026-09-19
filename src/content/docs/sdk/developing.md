@@ -14,7 +14,7 @@ that plane with fakes and never leave your editor — and the SDK ships those fa
 ## Getting the SDK
 
 **Inside an agent image, it is already there.** `base-python` and `base-node` bundle the
-package, so a `FROM ghcr.io/ctxmesh/base-python:v0.1.0-beta.6` agent can `import ctxmesh` with no install
+package, so a `FROM ghcr.io/ctxmesh/base-python:v0.1.0-beta.7` agent can `import ctxmesh` with no install
 step and no `requirements.txt` entry.
 
 ### Your image must run as a non-root user
@@ -26,17 +26,19 @@ root never starts — the pod reports:
 CreateContainerConfigError: container has runAsNonRoot and image will run as root
 ```
 
-**`v0.1.0-beta.6` and earlier base images run as root.** Until the next release, either set
-`spec.unconfined: true` on the AgentDeployment, or add a non-root user to your own image:
+**Fixed in `v0.1.0-beta.7`.** `base-python` and `base-node` now end as `65532:65532`, so an
+agent built on them needs nothing extra. If you are pinned to `v0.1.0-beta.6` or earlier, those
+images run as root — either move to `v0.1.0-beta.7`, set `spec.unconfined: true` on the
+AgentDeployment, or add the user yourself:
 
 ```dockerfile
 FROM ghcr.io/ctxmesh/base-python:v0.1.0-beta.6
 USER 65532:65532
 ```
 
-From the next release onward `base-python` and `base-node` already end as `65532:65532`, and you
-only need to act if your image writes to a root-owned path at **build** time. Then step up and back
-down — whatever user the image ends on is the user the container runs as:
+On `v0.1.0-beta.7` you only need to act if your image writes to a root-owned path at **build**
+time. Then step up and back down — whatever user the image ends on is the user the container runs
+as:
 
 ```dockerfile
 FROM ghcr.io/ctxmesh/base-python:<version>

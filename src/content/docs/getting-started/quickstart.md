@@ -53,7 +53,7 @@ metadata:
   name: hello-agent
   namespace: my-team
 spec:
-  image: ghcr.io/ctxmesh/echo-agent:v0.1.0-beta.6
+  image: ghcr.io/ctxmesh/echo-agent:v0.1.0-beta.7
   executionModel: serving
 ```
 

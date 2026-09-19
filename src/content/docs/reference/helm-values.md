@@ -76,7 +76,7 @@ Set a map to `null` to remove the block entirely — what you want when a `Limit
 namespace supplies them instead:
 
 ```bash
-helm upgrade ctxmesh oci://ghcr.io/ctxmesh/charts/ctxmesh --version 0.1.0-beta.6 \
+helm upgrade ctxmesh oci://ghcr.io/ctxmesh/charts/ctxmesh --version 0.1.0-beta.7 \
   --set bff.resources.limits.memory=2Gi \
   --set gateway.resources.limits.cpu=4
 ```
