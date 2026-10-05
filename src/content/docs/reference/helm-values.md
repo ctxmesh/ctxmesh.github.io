@@ -11,8 +11,9 @@ page is the values reference.
 The fastest path to a correct production posture is the shipped overlay:
 
 ```bash
-helm install ctxmesh ./deploy/helm/ctxmesh \
-  -f deploy/helm/ctxmesh/values-production.yaml \
+helm pull oci://ghcr.io/ctxmesh/charts/ctxmesh --version 0.1.0-beta.8 --untar   # for values-production.yaml
+helm install ctxmesh oci://ghcr.io/ctxmesh/charts/ctxmesh --version 0.1.0-beta.8 \
+  -f ctxmesh/values-production.yaml \
   [+ your own overrides]
 ```
 

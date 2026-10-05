@@ -7,11 +7,6 @@ sidebar:
 
 This is the happy path, start to finish. You'll give an agent a model, deploy it, and see its trace.
 
-:::note[Docs in progress]
-Field names track the shipped product; exact commands and chart coordinates are finalized toward
-general availability.
-:::
-
 ## 0. Make a namespace to work in
 
 Every manifest below lands in `my-team`, and nothing has created it yet:

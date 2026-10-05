@@ -5,11 +5,6 @@ sidebar:
   order: 1
 ---
 
-:::note[Docs in progress]
-Exact chart coordinates, values, and version pins are published at general availability. This page
-describes the intended production shape.
-:::
-
 The development install bundles Postgres, Redis/Valkey, and an object store for convenience. A
 **production** install brings those as managed/external services and turns on the hardening dials.
 

@@ -5,24 +5,18 @@ sidebar:
   order: 1
 ---
 
-:::note[Docs in progress]
-The reference is published and versioned as the API stabilizes toward general availability. Each
-custom resource will have a field-by-field page here, generated from the CRD schema so it stays in
-lockstep with the shipped product.
-:::
-
 ## Custom resources
 
-Field-level reference for each resource (coming as the API stabilizes):
+Field-level reference for each resource:
 
-- `AgentDeployment`
-- `AgentVersion`
-- `ModelRoute`
-- `GuardrailPolicy`
-- `ApprovalPolicy`
-- `FeedbackStore`
-- `EvalSuite`
-- `AgentScalingPolicy`
+- [AgentDeployment](/reference/crd/agentdeployment/) · [AgentVersion](/reference/crd/agentversion/)
+- [ModelRoute](/reference/crd/modelroute/) · [SecretBinding](/reference/crd/secretbinding/)
+- [MCPToolBinding](/reference/crd/mcptoolbinding/) · [KnowledgeBase](/reference/crd/knowledgebase/)
+- [AgentRegistry](/reference/crd/agentregistry/) · [AgentTeam](/reference/crd/agentteam/) · [Workflow](/reference/crd/workflow/)
+- [GuardrailPolicy](/reference/crd/guardrailpolicy/) · [ApprovalPolicy](/reference/crd/approvalpolicy/) · [AlertPolicy](/reference/crd/alertpolicy/)
+- [EvalSuite](/reference/crd/evalsuite/) · [FeedbackStore](/reference/crd/feedbackstore/)
+- [AgentScalingPolicy](/reference/crd/agentscalingpolicy/) · [Tenant](/reference/crd/tenant/) · [CredentialStore](/reference/crd/credentialstore/)
+- [Retired resources](/reference/crd/retired-resources/)
 
 See [Custom resources](/concepts/custom-resources/) for an overview of how they fit together.
 

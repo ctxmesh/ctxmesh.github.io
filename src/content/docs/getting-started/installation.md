@@ -5,26 +5,24 @@ sidebar:
   order: 2
 ---
 
-:::note[Docs in progress]
-ctxmesh is under active development ahead of general availability. Installation instructions and
-version-pinned artifacts are published here as they are released. This page describes the intended
-shape; exact commands and chart coordinates land with the first public release.
-:::
-
 ## Prerequisites
 
-- A Kubernetes cluster (v1.31+).
-- Knative Serving (for the serving execution model).
+<!-- ctxmesh:prerequisites kubernetes>=1.29 knative-serving -->
+- A Kubernetes cluster. ctxmesh itself needs **1.29 or newer** (the chart enforces it); your
+  Knative Serving release may need newer.
+- **Knative Serving.** Agents run as Knative Services, so this is the one add-on the default
+  install needs.
 - **Knative Eventing** — *only* if you use `executionModel: eventing`. The default
   (`serving`) and `job` agents need nothing from it, and the control plane starts and runs
   normally on a cluster without it. Install it when you want event-driven agents, then restart
   the ctxmesh controller so it picks the capability up; until then an eventing agent fails
   explicitly and tells you this.
-- **KEDA** — for event- and metric-driven autoscaling (`AgentScalingPolicy`, `ScaledObject`).
-  The chart's own description and post-install notes list it as a prerequisite.
-- An object store and Postgres for control-plane state (bundled options are provided for
-  development).
+- **KEDA** — *only* for queue-depth or custom-metric scaling (`AgentScalingPolicy`).
+- Helm 3.8 or newer.
 - Access to at least one model provider, or the bundled mock provider for local development.
+
+The data plane (PostgreSQL, an object store, Valkey and NATS) is bundled for development and trial
+installs; production installs bring their own.
 
 ## Install (overview)
 
@@ -68,6 +66,33 @@ The chart is an **OCI artifact on GHCR** — there is no `helm repo add` step, a
 pulls `oci://` references natively. `--version` is the chart version; the images it
 references carry the matching `appVersion`, so an install is reproducible from that one
 number. See [compatibility](/reference/compatibility/) for which SDK goes with it.
+
+On a fresh local cluster, measured runs took **7 to 18 minutes** from an empty cluster to a running
+agent (typically 7 to 11), most of it pulling images.
+
+## Sign in to the console
+
+```bash
+kubectl -n ctxmesh port-forward svc/ctxmesh-bff 9090:9090   # then open http://localhost:9090/
+```
+
+The console signs you in with a Kubernetes bearer token and acts with that identity's RBAC. To make
+one for a namespace you will build agents in (`default` here), bind the chart's developer role to a
+ServiceAccount and ask for a token:
+
+```bash
+kubectl -n default create serviceaccount ctxmesh-builder
+kubectl -n default create rolebinding ctxmesh-builder --clusterrole=ctxmesh-developer --serviceaccount=default:ctxmesh-builder
+kubectl -n default create token ctxmesh-builder --duration=8h
+```
+
+Paste the token into the console's sign-in. The same token reaches an agent through the control
+plane, which is the path that mints the run's capability and records the run:
+
+```bash
+curl -s -X POST http://localhost:9090/api/invoke -H "Authorization: Bearer $TOKEN" \
+  -H 'Content-Type: application/json' -d '{"agent":"my-agent","namespace":"default","input":"hello"}'
+```
 
 The install brings up:
 

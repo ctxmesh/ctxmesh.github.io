@@ -16,8 +16,9 @@ non-obvious coupling — **BFF HA requires the durable run store**.
 The chart ships a production overlay that satisfies every HA invariant self-consistently:
 
 ```bash
-helm install ctxmesh ./deploy/helm/ctxmesh \
-  -f deploy/helm/ctxmesh/values-production.yaml \
+helm pull oci://ghcr.io/ctxmesh/charts/ctxmesh --version 0.1.0-beta.8 --untar   # for values-production.yaml
+helm install ctxmesh oci://ghcr.io/ctxmesh/charts/ctxmesh --version 0.1.0-beta.8 \
+  -f ctxmesh/values-production.yaml \
   [+ your own overrides]
 ```
 
