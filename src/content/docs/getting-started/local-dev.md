@@ -16,6 +16,25 @@ agent, wired to the same [localhost plane](/concepts/the-launcher-contract/) —
 discovery, and the model gateway — that runs in a pod. What you test locally is what runs in the
 cluster, minus the cloud.
 
+## Get the CLI
+
+`ctxmesh` is built from a source checkout today; no release ships a binary yet. You need Go (the
+version in `go.mod`), Docker with Compose, and `make`:
+
+```bash
+git clone https://github.com/ctxmesh/ctxmesh && cd ctxmesh
+make build-cli                       # bin/ctxmesh
+export PATH="$PWD/bin:$PATH"
+make docker-build-discovery          # the tool-discovery sidecar `dev` runs beside your agent
+```
+
+`dev` runs your agent's own image, so build that too. For the bundled example:
+
+```bash
+make docker-build-example            # echo-agent:latest
+ctxmesh dev -f examples/echo-agent/agent.yaml
+```
+
 ## Run an agent locally
 
 From a directory with an `agent.yaml`:
