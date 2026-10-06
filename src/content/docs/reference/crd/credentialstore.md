@@ -12,12 +12,15 @@ description: Selects the credential backend (Kubernetes / Postgres / OpenBao / r
 own namespace, overriding the cluster default. `ClusterCredentialStore` is the cluster-wide default,
 used for any namespace without its own `CredentialStore`. Both share the same spec/status. Modeled on
 the External Secrets Operator's SecretStore / ClusterSecretStore, the backend is a config choice, not a
-rebuild. Enforcement point: the **token-service**, which constructs and health-checks the selected
+rebuild. Enforcement point: the **token-service**, which constructs the selected
 backend and does the OAuth refresh; agent pods hold no backend credentials. When no
-`ClusterCredentialStore` exists, the token-service defaults to the `kubernetes` backend.
+`ClusterCredentialStore` exists, the token-service defaults to the `kubernetes` backend. Only stores
+named **`default`** are read; a store with any other name is ignored without an error.
 
 Exactly one provider must be set. This is a **discriminated union** — set `kubernetes`, `postgres`,
-`openbao`, or `remote` (never more than one).
+or `remote` (never more than one). The schema also accepts `openbao`, but no `openbao` backend is
+built: a store that selects it fails every credential resolution. For OpenBao, use `postgres` with
+`openBaoTransit` custody.
 
 ## When to use / when not
 
@@ -55,7 +58,9 @@ Exactly one provider must be set. This is a **discriminated union** — set `kub
 `openBaoTransit` fields: `address` (required), `tokenSecretRef` (required), `mountPath` (default
 `transit`), `keyPrefix`, `caSecretRef`. `kmsV2` fields: `endpoint` (required), `keyIDPrefix`.
 
-### Provider: `openbao` (OpenBao/Vault)
+### Provider: `openbao` (OpenBao/Vault): not implemented
+
+Accepted by the schema; the token-service refuses it, so every credential resolution through the store fails.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -78,7 +83,7 @@ Exactly one provider must be set. This is a **discriminated union** — set `kub
 
 | Field | Type | Meaning |
 |-------|------|---------|
-| `status.conditions` | []Condition | Backend selection/health. `Ready=True` once the token-service constructs and health-checks the selected backend. |
+| `status.conditions` | []Condition | Reserved. No component writes it: the token-service only reads stores, so nothing reports whether a backend was selected or reachable. A backend that cannot be constructed fails credential resolution for the namespaces that select it. |
 
 ## Examples
 
@@ -101,7 +106,7 @@ spec:
 apiVersion: agents.ctxmesh.ai/v1beta1
 kind: ClusterCredentialStore
 metadata:
-  name: cluster-default
+  name: default                      # the only name the token-service reads
 spec:
   provider:
     postgres:

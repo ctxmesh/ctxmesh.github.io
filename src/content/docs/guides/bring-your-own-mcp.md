@@ -58,19 +58,20 @@ and revocable, fully audited. The mechanics that make this safe:
 
 ## 3. Choose where credentials are stored (CredentialStore)
 
-The credential **backend** is a config choice, not a rebuild. A `ClusterCredentialStore` sets the
-cluster-wide default; a namespaced `CredentialStore` overrides it for one namespace. The token-service
-constructs and health-checks the selected backend and does the OAuth refresh — **agent pods hold no
-backend credentials**.
+The credential **backend** is a config choice, not a rebuild. A `ClusterCredentialStore` named
+`default` sets the cluster-wide backend; a `CredentialStore` named `default` in a namespace overrides it
+for that namespace. **The name must be `default`**: the token-service looks up no other name, and a
+store with any other name is ignored without an error. The token-service constructs the selected backend
+and does the OAuth refresh — **agent pods hold no backend credentials**.
 
 ```yaml
 apiVersion: agents.ctxmesh.ai/v1beta1
 kind: ClusterCredentialStore
 metadata:
-  name: cluster-default
+  name: default                      # the only name the token-service reads
 spec:
   provider:
-    postgres:                        # exactly one of kubernetes | postgres | openbao | remote
+    postgres:                        # exactly one of kubernetes | postgres | remote
       dsnSecretRef:
         name: cred-postgres-dsn
         key: dsn
@@ -81,16 +82,14 @@ spec:
 ```
 
 The zero-dependency default is `kubernetes` (grants stored as Secrets in the locked credential
-namespace). Check the store is healthy:
-
-```bash
-kubectl get clustercredentialstore cluster-default \
-  -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}{"\n"}'
-# → True   (the token-service constructed and health-checked the backend)
-```
+namespace). The store has no status: nothing reports whether the backend was selected or reachable.
+The token-service reads the store when it next resolves a credential for that namespace, and caches the
+choice for up to a minute. A backend it cannot construct (a missing DSN or KEK Secret, an unreachable
+database) fails each credential resolution in the namespaces that select it, with the backend's own
+error.
 
 See the [CredentialStore reference](/reference/crd/credentialstore/) for the `postgres` encryption
-custodians (local KEK / OpenBao transit / KMS v2), `openbao`, and `remote` (BYO vault over mTLS).
+custodians (local KEK / OpenBao transit / KMS v2) and `remote` (BYO vault over mTLS).
 
 ## 4. Share a server across a team or the org
 

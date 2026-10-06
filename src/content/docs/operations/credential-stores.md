@@ -14,7 +14,7 @@ Two independently swappable plug-points make up "the vault" — keep them orthog
 
 | Axis | Decides | Options |
 |------|---------|---------|
-| **A — store / resolver** | Where tokens live and who returns a fresh one. | `kubernetes`, `postgres`, `openbao` (in-tree) · any `remote` HTTP provider (BYO vault) |
+| **A — store / resolver** | Where tokens live and who returns a fresh one. | `kubernetes`, `postgres` (in-tree) · any `remote` HTTP provider (BYO vault) |
 | **B — key custody** | Where the KEK (key-encryption key) lives and where crypto happens. | local KEK · OpenBao transit (per-tenant, crypto-shred) · KMS v2 plugin (cloud KMS / SoftHSM) |
 
 - **Default profile:** `kubernetes` store + a Kubernetes-Secret KEK — **zero external dependency**. A
@@ -44,11 +44,9 @@ spec:
     #       keyPrefix: "tenant-"
     #     # or: localKEKSecretRef: { name: cred-kek, key: kek }   (dev/default)
     #     # or: kmsV2: { endpoint: "unix:///var/run/kms/socket" } (generic, single-key)
-    # openbao:
-    #   address: https://openbao.cred.svc:8200
     # remote:
     #   endpoint: "https://cred-backend.acme.svc:8443"   # JSON-over-mTLS provider
-    #   mtls: { caSecretRef: {...}, clientCertSecretRef: {...} }
+    #   mtls: { caSecretRef: {...}, clientTLSSecretName: cred-client-tls }
 ```
 
 ## The backends
@@ -57,7 +55,7 @@ spec:
 |---------|------|-------------|-------|
 | `kubernetes` | in-tree | dev, trial, air-gapped | Grants as Kubernetes Secrets. Zero dependency. Passive (the platform owns freshness + envelope encryption). |
 | `postgres` | in-tree | scale / multi-tenant | Grants in Postgres; pair with a real KEK custodian for encryption-at-rest + crypto-shred. |
-| `openbao` | in-tree | OpenBao shops | Transit KEK + KV, or transit-only as the Axis-B custodian under another store. |
+| `openbao` | not implemented | — | The schema accepts it; the token-service refuses it. For OpenBao, use `postgres` with `openBaoTransit` custody (the KEK never leaves OpenBao). |
 | `remote` | out-of-tree | BYO vault | Any HTTP server implementing the **JSON-over-mTLS `credprovider` contract** — an HTTP server + JSON + a client cert, in any language. |
 
 The `remote` contract is a small, versioned JSON-over-mTLS surface (`/v1/resolve`, `/v1/store`,
