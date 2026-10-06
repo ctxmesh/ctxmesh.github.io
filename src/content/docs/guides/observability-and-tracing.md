@@ -8,9 +8,12 @@ sidebar:
 **Goal:** understand exactly what an agent did on a given run — the step → tool → model tree, the cost, and
 the tokens — using the console, and link out to the trace backend for deep forensics.
 
-**Prerequisites:** an agent deployed and serving ([Deploy an agent](/guides/deploy-an-agent/)); the bundled
-observability stack up (the OTel collector sidecar is injected per agent; Langfuse is the trace store of
-record). No SDK is required — a framework agent on the platform base image is traced as-is.
+**Prerequisites:** an agent deployed and serving ([Deploy an agent](/guides/deploy-an-agent/)), and a trace
+backend. The chart does not bundle one: connect Langfuse or any OTLP backend as described in
+[Observability backends](/operations/observability-backends/). Without one, the console still opens each run
+made through the control plane (its input, reply and timeline); the Runs list, the trace tree, cost and
+tokens on this page need the backend. No SDK is required — a framework agent on the platform base
+image is traced as-is.
 
 ## What you get for free
 
@@ -65,7 +68,7 @@ that *halt* a run on a budget breach, see [Model routing & cost](/guides/model-r
 
 ## 4. Link out to the trace backend
 
-Langfuse is the **store of record** for traces and scores. The native run/trace pages cover the common path;
+When Langfuse is your trace backend, it is the **store of record** for traces and scores. The native run/trace pages cover the common path;
 for deep forensics, the **"Open in Langfuse"** link-out on a run opens that exact trace in Langfuse. Feedback
 scores you submit (see [Feedback & improvement](/guides/feedback-and-improvement/)) land on the same trace,
 so quality signal and execution detail sit together.

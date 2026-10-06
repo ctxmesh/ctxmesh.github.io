@@ -86,13 +86,16 @@ kubectl -n default create rolebinding ctxmesh-builder --clusterrole=ctxmesh-deve
 kubectl -n default create token ctxmesh-builder --duration=8h
 ```
 
-Paste the token into the console's sign-in. The same token reaches an agent through the control
-plane, which is the path that mints the run's capability and records the run:
+Paste the token into the console's sign-in. The same token runs an agent through the control plane,
+which mints the run's capability and records the run:
 
 ```bash
-curl -s -X POST http://localhost:9090/api/invoke -H "Authorization: Bearer $TOKEN" \
-  -H 'Content-Type: application/json' -d '{"agent":"my-agent","namespace":"default","input":"hello"}'
+RUN=$(curl -s -X POST http://localhost:9090/api/runs -H "Authorization: Bearer $TOKEN" \
+  -H 'Content-Type: application/json' -d '{"agent":"my-agent","namespace":"default","input":"hello"}' | jq -r .id)
+curl -s http://localhost:9090/api/runs/$RUN -H "Authorization: Bearer $TOKEN"   # queued, running, then succeeded
 ```
+
+The run opens in the console at `http://localhost:9090/runs/<id>`.
 
 The install brings up:
 
