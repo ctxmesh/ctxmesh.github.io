@@ -25,22 +25,23 @@ Then open **http://localhost:9090/**.
 
 **Signing in.** With no SSO configured — the default — the console asks for a Kubernetes bearer
 token, and it acts with *that* identity: everything you can do in the console is exactly what your
-RBAC allows, nothing more. Paste a token for a subject that has one of the shipped personas bound in
-the namespace you want to work in:
+RBAC allows, nothing more. Make a ServiceAccount in the namespace you will work in, bind the shipped
+personas it needs, and ask for a token:
 
 ```bash
-# Bind yourself (or a ServiceAccount) to a persona in your namespace.
-# ctxmesh-operator can create and run agents; ctxmesh-developer and ctxmesh-viewer are narrower.
-kubectl create rolebinding my-operator \
-  --clusterrole=ctxmesh-operator --user="$(kubectl config view --minify -o jsonpath='{.contexts[0].context.user}')" \
-  -n my-team
+kubectl create namespace my-team
+kubectl -n my-team create serviceaccount ctxmesh-builder
+# ctxmesh-operator creates and runs agents; ctxmesh-credential-admin can store a provider key
+# (and deliberately cannot read one back), which connecting a provider needs.
+kubectl -n my-team create rolebinding ctxmesh-builder --clusterrole=ctxmesh-operator --serviceaccount=my-team:ctxmesh-builder
+kubectl -n my-team create rolebinding ctxmesh-builder-credentials --clusterrole=ctxmesh-credential-admin --serviceaccount=my-team:ctxmesh-builder
+kubectl -n my-team create token ctxmesh-builder --duration=8h
 ```
 
-A stock install binds **nobody** to a persona, so without this the console signs you in and then
-shows you an empty, read-only view — which looks like a broken install and is not one.
-
-To connect a provider you also need `ctxmesh-credential-admin` in that namespace; it can write a
-credential and deliberately cannot read one back.
+Paste the token, then type `my-team` into the **Workspace** box at the top: a namespace-bound token
+cannot list namespaces, so the console asks you to name yours. A stock install binds **nobody** to a
+persona, so without the bindings the console signs you in and then shows an empty, read-only view —
+which looks like a broken install and is not one.
 
 For real use, turn on SSO (`auth.oidc.enabled`) and bind the personas to your groups instead of
 handing out tokens — see [Helm values](/reference/helm-values/).
@@ -86,13 +87,17 @@ across the conversation. If a tool needs your [on-behalf-of consent](/concepts/s
 inline "Connect" prompt appears mid-run and the turn resumes once you've connected — connecting is part
 of running the agent, not a separate setup step.
 
+The first message to an agent on a model you just connected can come back with **"Invalid model
+name"**: the model gateway restarts to load a new model, which takes up to a minute. Send it again
+once it has.
+
 ## 4. Inspect the run
 
-Every turn is fully traced. The **run inspector** shows the run's steps, timing, tokens, and cost —
-with tool spans visible — as an on-theme, redaction-honest summary; the native
-[trace explorer](/concepts/observability-model/) gives you the full span tree with a timing waterfall,
-no separate login. This is the same [observability](/guides/observability-and-tracing/) a framework
-agent gets for free, surfaced right where you ran the agent.
+Each turn is a [run](/concepts/runs-and-execution/), and its page shows the input, the reply and the
+event timeline. With a trace backend connected (a stock install has none; see
+[Observability backends](/operations/observability-backends/)), the **run inspector** adds the run's
+steps, timing, tokens and cost, with tool spans visible, and the native
+[trace explorer](/concepts/observability-model/) gives you the full span tree with a timing waterfall.
 
 ## Where to go next
 
