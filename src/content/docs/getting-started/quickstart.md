@@ -5,7 +5,7 @@ sidebar:
   order: 3
 ---
 
-This is the happy path, start to finish. You'll give an agent a model, deploy it, run it, and open the run.
+This is the happy path, start to finish. You'll give an agent a model, deploy it, and talk to it.
 
 ## 0. Make a namespace to work in
 
@@ -68,32 +68,29 @@ kubectl get agentdeployment hello-agent -n my-team -w
 # wait for Ready=True
 ```
 
-## 3. Run it
+## 3. Talk to it
 
-Run the agent through the control plane, which mints the run's capability and records the run:
+Call the agent through the control plane, which mints the run's capability:
 
 ```bash
-RUN=$(curl -s -X POST http://localhost:9090/api/runs -H "Authorization: Bearer $TOKEN" \
+curl -s -X POST http://localhost:9090/api/invoke -H "Authorization: Bearer $TOKEN" \
   -H 'Content-Type: application/json' \
-  -d '{"agent":"hello-agent","namespace":"my-team","input":"hello"}' | jq -r .id)
-curl -s http://localhost:9090/api/runs/$RUN -H "Authorization: Bearer $TOKEN"
+  -d '{"agent":"hello-agent","namespace":"my-team","input":"hello"}'
 ```
 
-The run goes `queued`, then `running`, then `succeeded`, and `messages` holds the reply from the mock
-model. The agent's own URL (`status.url`) answers a direct request too, but a call that bypasses the
-control plane is not a run: nothing records it.
+The reply carries the mock model's answer and the run's `traceId`. (The agent's own URL in
+`status.url` answers a direct request too, but that call skips the control plane: no capability, no
+record.)
 
-## 4. Open the run
+## 4. See what it did
 
-Open `http://localhost:9090/runs/<the run id>` and sign in with the same token. The run page shows its
-input, the reply and the event timeline.
-
-Per-step traces and cost come from a trace backend, which a stock install does not include. Add one when
-you want them: see [Observability backends](/operations/observability-backends/).
+Per-step traces and cost come from a trace backend, which a stock install does not include. Connect
+one and the console's **Runs** page lists this run with its step → tool → model tree and its cost: see
+[Observability backends](/operations/observability-backends/).
 
 ## You've done it
 
-You deployed a governed, autoscaled agent, ran it through the control plane, and opened the run. Next, make it real:
+You deployed a governed, autoscaled agent and called it through the control plane. Next, make it real:
 
 - Give it a real model → [Connect a model provider](/guides/connect-a-model-provider/)
 - Add content rules → [Guardrails](/guides/guardrails/)
